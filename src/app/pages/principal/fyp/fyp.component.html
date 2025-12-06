@@ -1,21 +1,18 @@
 <ion-content>
-  <ion-list>jfklajsdlkjfkls
-        <app-post-card
-          avatar="https://randomuser.me/api/portraits/women/65.jpg"
-          username="Andrea López"
-          location="CDMX, México"
-          content="Un día increíble con una vista espectacular 😍✨"
-          image="https://picsum.photos/600/600?3"
-        >
-        </app-post-card>
-        <app-post-card
-          avatar="https://randomuser.me/api/portraits/women/65.jpg"
-          username="Andrea López"
-          location="CDMX, México"
-          content="Un día increíble con una vista espectacular 😍✨"
-          image="https://picsum.photos/600/600?3"
-        >
-        </app-post-card>
+  <ion-list>
+    <ion-item *ngFor="let post of posts" lines="none">
+      <app-post-card
+        [avatar]="post.post_by.avatar_url"
+        [username]="post.post_by.name"
+        location="mexico"
+        [content]="post.description"
+        [image]="post.photos[0]"
+        [hashtags]="post.hashtags"
+        [likes]="post.likes.length"
+        [comments]="post.comments.length"
+      >
+      </app-post-card>
+    </ion-item>
   </ion-list>
   <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>

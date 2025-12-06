@@ -21,6 +21,18 @@
         height: 20px;
         font-size: 11px;
     }
+    
+    ion-button{
+        color: #fff;
+    }
+
+.hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+
 
     .single-img {
         width: 100%;
