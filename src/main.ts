@@ -4,15 +4,19 @@ import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalo
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
-import { isDevMode } from '@angular/core';
+import { importProvidersFrom, isDevMode } from '@angular/core';
 import { provideServiceWorker } from '@angular/service-worker';
 
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
+import { HttpClientModule, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './app/Interceptor/AuthInterceptor';
 
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+    importProvidersFrom(HttpClientModule),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),

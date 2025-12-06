@@ -1,0 +1,81 @@
+<ion-content>
+
+  <div class="center-wrapper">
+
+    <div class="container">
+
+      <div class="logo-container">
+        <ion-img src="../../../../assets/icon/logo-black.png"></ion-img>
+      </div>
+      <h2 class="ion-margin-bottom">HiddenWays</h2>
+
+      <div class="step-container">
+
+        <div *ngIf="step === 1" [formGroup]="registerForm">
+          <h3>¿Cómo te gusta que te llamen?</h3>
+          <ion-item>
+            <ion-label position="floating">Aqui tu nombre</ion-label>
+            <ion-input type="text" formControlName="name"></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+            <p>Ingresa tu nombre</p>
+          </ion-text>
+          <ion-button expand="block" (click)="nextStep()" [disabled]="registerForm.get('name')?.invalid">Siguiente</ion-button>
+          <ion-button fill="clear" (click)="goToLogin()">
+            Volver
+          </ion-button>
+        </div>
+
+        <div *ngIf="step === 2" [formGroup]="registerForm">
+          <h3>Hola {{ registerForm.get('name')?.value }} ahora necesitas ingresar una direccion de correo</h3>
+          <ion-item>
+            <ion-label position="floating">Correo</ion-label>
+            <ion-input type="email" formControlName="email"></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+            <p>Ingresa un correo válido</p>
+          </ion-text>
+          <ion-button expand="block" (click)="nextStep()" [disabled]="registerForm.get('email')?.invalid">Siguiente</ion-button>
+          <ion-button fill="clear" (click)="prevStep()">
+            Volver
+          </ion-button>
+
+        </div>
+
+        <div *ngIf="step === 3" [formGroup]="registerForm">
+          <h3>Confirma tu correo</h3>
+          <p>Vale, para confirmar que te pertenece el correo hemos enviado un codigo de confirmación a {{ registerForm.get('email')?.value }}</p>
+          <ion-item>
+            <ion-label position="floating">Código de confirmación</ion-label>
+            <ion-input type="text" formControlName="code"></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="registerForm.get('code')?.invalid && registerForm.get('code')?.touched">
+            <p>Ingresa el código</p>
+          </ion-text>
+          <ion-button expand="block" (click)="nextStep()" [disabled]="registerForm.get('code')?.invalid">Siguiente</ion-button>
+          <ion-button fill="clear" (click)="prevStep()">
+            Volver
+          </ion-button>
+
+        </div>
+
+        <div *ngIf="step === 4" [formGroup]="registerForm">
+          <h3>Elige una contraseña</h3>
+          <ion-item>
+            <ion-label position="floating">Contraseña</ion-label>
+            <ion-input type="password" formControlName="password"></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+            <p>Ingresa una contraseña</p>
+          </ion-text>
+          <ion-button expand="block" (click)="register()" [disabled]="registerForm.get('password')?.invalid">Registrarse</ion-button>
+          <ion-button fill="clear" (click)="prevStep()">
+            Volver
+          </ion-button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</ion-content>

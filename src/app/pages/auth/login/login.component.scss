@@ -1,0 +1,48 @@
+/* login.page.scss */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* centra vertical */
+  align-items: center;     /* centra horizontal */
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.logo-container {
+  margin-bottom: 20px;
+}
+
+.logo-container ion-img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 350px;
+}
+
+.login-form ion-item {
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+ion-button {
+    padding-top: 10px;
+    width: 100%;
+    max-width: 350px;
+  --background: #39393a;
+  color: #ffffff;
+}
+
+.register-text {
+  margin-top: 15px;
+  text-align: center;
+}

@@ -1,0 +1,42 @@
+/* Contenedor centrado vertical y horizontal */
+.center-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Contenedor del formulario */
+.container {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* Logo */
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.logo-container ion-img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+ion-item {
+  margin-bottom: 15px;
+  border-radius: 8px;
+}
+
+/* Botones */
+ion-button {
+--background: #39393a;
+  --color: #fff;
+  margin-top: 50px;
+}
