@@ -1,0 +1,47 @@
+.post-card {
+    --background: var(--ion-background-color, #000);
+    color: #fff;
+
+    ion-avatar img {
+        object-fit: cover;
+    }
+
+    .rounded-img {
+        border-radius: 18px;
+        overflow: hidden;
+    }
+
+    .date {
+        font-size: 12px;
+        opacity: 0.6;
+    }
+
+    ion-chip {
+        margin-top: 4px;
+        height: 20px;
+        font-size: 11px;
+    }
+
+    .single-img {
+        width: 100%;
+        border-radius: 12px;
+        margin-top: 8px;
+    }
+
+    .grid-img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 6px;
+    }
+
+    ion-item {
+        --background: transparent;
+    }
+    
+    ion-chip{
+        gap: 4px;
+    }
+    
+}

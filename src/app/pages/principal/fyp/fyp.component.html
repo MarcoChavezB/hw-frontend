@@ -1,0 +1,23 @@
+<ion-content>
+  <ion-list>
+        <app-post-card
+          avatar="https://randomuser.me/api/portraits/women/65.jpg"
+          username="Andrea López"
+          location="CDMX, México"
+          content="Un día increíble con una vista espectacular 😍✨"
+          image="https://picsum.photos/600/600?3"
+        >
+        </app-post-card>
+        <app-post-card
+          avatar="https://randomuser.me/api/portraits/women/65.jpg"
+          username="Andrea López"
+          location="CDMX, México"
+          content="Un día increíble con una vista espectacular 😍✨"
+          image="https://picsum.photos/600/600?3"
+        >
+        </app-post-card>
+  </ion-list>
+  <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

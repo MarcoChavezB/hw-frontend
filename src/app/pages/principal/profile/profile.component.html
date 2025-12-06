@@ -1,0 +1,36 @@
+<ion-content fullscreen>
+
+  <div class="profile-header">
+    <ion-avatar class="avatar-large">
+      <img [src]="user.avatar" />
+    </ion-avatar>
+
+    <h2 class="name">{{ user.name }}</h2>
+    <p class="preferred-name">@{{ user.preferred }}</p>
+
+    <p class="bio" *ngIf="user.bio">{{ user.bio }}</p>
+
+    <ion-button shape="round" fill="outline" class="edit-btn">
+      Editar Perfil
+    </ion-button>
+  </div>
+
+  <ion-item lines="full" class="divider"></ion-item>
+
+  <div class="section-title">
+    <h3>Publicaciones</h3>
+  </div>
+
+  <ion-list class="post-list">
+    <app-post-card
+      *ngFor="let post of posts"
+      [avatar]="user.avatar"
+      [username]="user.name"
+      [location]="post.location"
+      [content]="post.content"
+      [image]="post.image"
+    >
+    </app-post-card>
+  </ion-list>
+
+</ion-content>

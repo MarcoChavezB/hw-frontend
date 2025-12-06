@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">hw-frontend</string>
+    <string name="title_activity_main">hw-frontend</string>
+    <string name="package_name">com.hw.app</string>
+    <string name="custom_url_scheme">com.hw.app</string>
+</resources>
