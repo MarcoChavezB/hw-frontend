@@ -90,6 +90,7 @@ export class ProfileComponent implements OnInit {
 
   
     async getMyPosts() {
+      this.posts = await this.dataService.getCachedPostsUser(this.userId) || [];
       try {
         const response = await this.postService.getMyPosts(this.userId).toPromise();
         if (!response!.success || response!.data.length === 0) {

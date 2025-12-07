@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonContent, IonList, IonItem, IonAvatar, IonLabel, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonProgressBar } from "@ionic/angular/standalone";
+import { IonContent, IonList, IonItem, ToastController, IonLabel, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonProgressBar } from "@ionic/angular/standalone";
 import { PostCardComponent } from "src/app/components/cards/post-card/post-card.component";
 import { Post } from 'src/app/models/Post';
 import { DataService } from 'src/app/services/data/data-service';
@@ -11,30 +11,46 @@ import { PostService } from 'src/app/services/post/post-service';
   selector: 'app-fyp',
   templateUrl: './fyp.component.html',
   styleUrls: ['./fyp.component.scss'],
-  imports: [IonProgressBar, IonInfiniteScrollContent, IonInfiniteScroll,IonList, IonContent, PostCardComponent, CommonModule, IonItem],
+  imports: [IonList, IonContent, PostCardComponent, CommonModule, IonItem],
 })
 export class FypComponent  implements OnInit {
   posts : Post[] = [];
   postService = inject(PostService);
   dataService = inject(DataService);
   router = inject(Router);
+  
   ngOnInit() {
     this.fetchPosts();
   }
   
+  constructor(
+  private toastCtrl: ToastController
+  ){}
+  
   async fetchPosts() {
+    this.posts = await this.dataService.obtenerPostData() || [];
     try {
       const response = await this.postService.getPosts().toPromise();
       if (!response!.success || response!.data.length === 0) {
         this.posts = [];
         await this.dataService.clearPostData();
       } else {
+        this.toatsMessage('Posts actualizados.');
         this.posts = response!.data;
         await this.dataService.guardarPostData(response!.data);
       }
     } catch (error) {
+      this.toatsMessage('Estas viendo posts sin conexión.');
       this.posts = await this.dataService.obtenerPostData() || [];
     }
+  }
+  
+  toatsMessage(message: string){
+    this.toastCtrl.create({
+        position: 'top',
+        message: message,
+        duration: 3000,
+      }).then(toast => toast.present());
   }
   
   onIonInfinite(event: InfiniteScrollCustomEvent) {

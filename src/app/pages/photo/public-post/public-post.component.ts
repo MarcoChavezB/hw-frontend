@@ -124,6 +124,7 @@ export class PublicPostComponent implements OnInit {
         };
         this.postService.createPost(body).subscribe(
             async (response) => {
+                await this.dataService.putNewPost(response.data);
                 await this.loadingCtrl.dismiss();
                 this.loadingCtrl.dismiss();
                 this.toastCtrl.create({

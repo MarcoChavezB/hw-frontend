@@ -239,7 +239,20 @@ export class DataService {
       return null;
     }
   }
-
+  
+  async putNewPost(post: Post) {
+    try {
+      const db = await this.dbPromise;
+      const data = await db.get('postData', 1);
+      if (data && data.posts) {
+        data.posts.unshift(post);
+        await db.put('postData', data);
+      }
+    } catch (err) {
+      console.error('Error agregando nuevo post en IndexedDB', err);
+    }
+  }
+  
   async clearPostData() {
     try {
       const db = await this.dbPromise;
