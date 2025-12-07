@@ -9,17 +9,24 @@
     <p class="preferred-name">@{{ user?.user?.preferred_name }}</p>
 
     <p class="bio" *ngIf="user?.user?.bio">{{ user?.user?.bio }}</p>
-
   </div>
 
   <ion-item lines="full" class="divider"></ion-item>
 
-  <div class="section-title">
-    <h3>Mis publicaciones</h3>
-  </div>
-
+  <!-- Tabs / Segment -->
+  <ion-segment [(ngModel)]="selectedTab">
+    <ion-segment-button value="posts">
+      Mis publicaciones
+    </ion-segment-button>
+    <ion-segment-button value="favorites">
+      Favoritos
+    </ion-segment-button>
+    <ion-segment-button value="likes">
+      Likes
+    </ion-segment-button>
+  </ion-segment>
   <ion-list class="post-list">
-    <ion-item *ngFor="let post of posts" lines="none">
+    <ion-item *ngFor="let post of getFilteredPosts()" lines="none">
       <app-post-card
         [avatar]="post.post_by.avatar_url"
         [username]="post.post_by.name"
@@ -35,10 +42,10 @@
         [favorite]="post.already_saved"
         (likeEvent)="likePost(post.id, post)"
         (favoriteEvent)="savePost(post.id, post)"
+        [postId]="post.id"
       >
       </app-post-card>
     </ion-item>
-
   </ion-list>
 
 </ion-content>

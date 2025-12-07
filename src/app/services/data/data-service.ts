@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IDBPDatabase, openDB } from 'idb';
-import { Post } from 'src/app/models/Post';
+import { Comment, Post } from 'src/app/models/Post';
 import { UserData } from 'src/app/models/User';
 
 @Injectable({
@@ -80,6 +80,140 @@ export class DataService {
     } catch (err) {
       console.error('Error leyendo posts por usuario de IndexedDB', err);
       return null;
+    }
+  }
+  
+  async putCachedFavoritePosts(userId: number, posts: Post[]) {
+    try {
+      const db = await this.dbPromise;
+      await db.put('postData', { id: userId + 1000000, posts });
+    } catch (err) {
+      console.error('Error guardando posts favoritos por usuario en IndexedDB', err);
+    }
+  }
+  
+  async getCachedFavoritePosts(userId: number): Promise<Post[] | null> {
+    try {
+      const db = await this.dbPromise;
+      const data = await db.get('postData', userId + 1000000);
+      return data?.posts ?? null;
+    } catch (err) {
+      console.error('Error leyendo posts favoritos por usuario de IndexedDB', err);
+      return null;
+    }
+  }
+  
+  async clearCachedFavoritePosts(userId: number) {
+    try {
+      const db = await this.dbPromise;
+      await db.delete('postData', userId + 1000000);
+    } catch (err) {
+      console.error('Error eliminando posts favoritos por usuario de IndexedDB', err);
+    }
+  }
+  
+  async putCachedSavedPosts(userId: number, posts: Post[]) {
+    try {
+      const db = await this.dbPromise;
+      await db.put('postData', { id: userId + 3000000, posts });
+    } catch (err) {
+      console.error('Error guardando posts guardados por usuario en IndexedDB', err);
+    }
+  }
+  
+  async updateCachedPostComment(postId: number, comment: Comment) {
+    try {
+      const db = await this.dbPromise;
+      const allKeys = await db.getAllKeys('postData');
+      for (const key of allKeys) {
+        const data = await db.get('postData', key);
+        if (data && data.posts) {
+          const postIndex = data.posts.findIndex((p: Post) => p.id === postId);
+          if (postIndex !== -1) {
+            data.posts[postIndex].comments.push(comment);
+            await db.put('postData', data);
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error actualizando comentario en posts guardados por usuario en IndexedDB', err);
+    }
+  }
+  
+  async removeLastCachedPostComment(postId: number) {
+    try {
+      const db = await this.dbPromise;
+      const allKeys = await db.getAllKeys('postData');
+      for (const key of allKeys) {
+        const data = await db.get('postData', key);
+        if (data && data.posts) {
+          const postIndex = data.posts.findIndex((p: Post) => p.id === postId);
+          if (postIndex !== -1) {
+            data.posts[postIndex].comments.pop();
+            await db.put('postData', data);
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error eliminando último comentario en posts guardados por usuario en IndexedDB', err);
+    }
+  }
+
+  async getCachedSavedPosts(userId: number): Promise<Post[] | null> {
+    try {
+      const db = await this.dbPromise;
+      const data = await db.get('postData', userId + 3000000);
+      return data?.posts ?? null;
+    } catch (err) {
+      console.error('Error leyendo posts guardados por usuario de IndexedDB', err);
+      return null;
+    }
+  }
+  
+  async clearCachedSavedPosts(userId: number) {
+    try {
+      const db = await this.dbPromise;
+      await db.delete('postData', userId + 3000000);
+    } catch (err) {
+      console.error('Error eliminando posts guardados por usuario de IndexedDB', err);
+    }
+  }
+
+  async putCachedLikedPosts(userId: number, posts: Post[]) {
+    try {
+      const db = await this.dbPromise;
+      await db.put('postData', { id: userId + 2000000, posts });
+    } catch (err) {
+      console.error('Error guardando posts liked por usuario en IndexedDB', err);
+    }
+  }
+
+    async getCachedLikedPosts(userId: number): Promise<Post[] | null> {
+      try {
+        const db = await this.dbPromise;
+        const data = await db.get('postData', userId + 2000000);
+        return data?.posts ?? null;
+      } catch (err) {
+        console.error('Error leyendo posts liked por usuario de IndexedDB', err);
+        return null;
+      }
+    }
+
+   async clearCachedLikedPosts(userId: number) {
+    try {
+        const db = await this.dbPromise;
+        await db.delete('postData', userId + 2000000);
+    } catch (err) {
+      console.error('Error eliminando posts liked por usuario de IndexedDB', err);
+    }
+  }
+
+  async clearCachedPostsUser(userId: number) {
+    try {
+      const db = await this.dbPromise;
+      await db.delete('postData', userId);
+    } catch (err) {
+      console.error('Error eliminando posts por usuario de IndexedDB', err);
     }
   }
 

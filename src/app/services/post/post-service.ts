@@ -19,6 +19,14 @@ export class PostService {
         return this.http.get<PostRequest>(environment.postByUser(userId));
     }
     
+    getLikedPosts(userId: number): Observable<PostRequest> {
+        return this.http.get<PostRequest>(environment.postLikedByUser(userId));
+    }
+    
+    getSavedPosts(userId: number): Observable<PostRequest> {
+        return this.http.get<PostRequest>(environment.postSavedByUser(userId));
+    }
+    
     getHastags(): Observable<HashtagResponse> {
         return this.http.get<HashtagResponse>(environment.hashtags);
     }

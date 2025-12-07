@@ -4,6 +4,7 @@ export interface PostResponse{
 
 export interface PostRequest {
   success: boolean
+  empty: boolean
   data: Post[]
 }
 
@@ -25,6 +26,11 @@ export interface PostBy {
   id: number
   name: string
   avatar_url: any
+}
+
+export interface CommentResponse{
+    'success': boolean
+    'data': Comment
 }
 
 export interface Comment {

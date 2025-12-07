@@ -8,8 +8,10 @@ export const environment = {
   hashtags: `${baseURL}fyp/hashtags`,
   createPost: `${baseURL}fyp/posts/store`,
   
-    toggleLikePost: (postId: number) => `${baseURL}fyp/posts/toggle/like/${postId}`,
+  toggleLikePost: (postId: number) => `${baseURL}fyp/posts/toggle/like/${postId}`,
   toggleSavePost: (postId: number) => `${baseURL}fyp/posts/toggle/save/${postId}`,
   postByUser: (userId: number) => `${baseURL}fyp/posts/${userId}`,
-
+  postLikedByUser: (userId: number) => `${baseURL}fyp/post/profile/likes/${userId}`,
+  postSavedByUser: (userId: number) => `${baseURL}fyp/post/profile/saved/${userId}`,
+  postCommentStore: (postId: number) => `${baseURL}comments/store/${postId}`
 };

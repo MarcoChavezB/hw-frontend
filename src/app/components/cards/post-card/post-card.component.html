@@ -24,7 +24,7 @@
         <p>{{ content }}</p>
     </ion-card-content>
 
-    <img [src]="localImage || '/assets/placeholder.png'" class="single-img rounded-img" />
+    <img [src]="localImage" class="single-img rounded-img" />
       <div class="hashtags">
           <ion-chip *ngFor="let tag of hashtags" color="tertiary">
               <ion-label>#{{ tag }}</ion-label>
@@ -49,7 +49,8 @@
             <p>{{likes}}</p>
         </ion-button>
 
-        <ion-button fill="clear">
+        <ion-button (click)="openCommentsModal()"
+        fill="clear">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="28" color="#ffffff"
                 fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round">
                 <path

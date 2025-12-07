@@ -1,16 +1,22 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, input, Input, OnInit, Output } from '@angular/core';
-import { IonItem, IonButton, IonIcon, IonCard, IonAvatar, IonLabel, IonChip, IonCardContent, IonImg, IonGrid, IonRow, IonCol, IonItemDivider } from "@ionic/angular/standalone";
-import { formatDate } from '@angular/common';
+import { IonItem, IonButton, IonIcon, IonCard, ModalController ,IonAvatar, IonLabel, IonChip, IonCardContent, IonImg, IonGrid, IonRow, IonCol, IonItemDivider } from "@ionic/angular/standalone";
 import { Directory, Filesystem } from '@capacitor/filesystem';
+import { FormsModule } from '@angular/forms';
+import { CommentsModalComponent } from '../comments-modal/comments-modal.component';
+import { Comment } from 'src/app/models/Post';
 
 @Component({
   selector: 'app-post-card',
   templateUrl: './post-card.component.html',
   styleUrls: ['./post-card.component.scss'],
-  imports: [IonCardContent, IonChip, IonLabel, IonAvatar, IonButton, IonCard, IonItem, CommonModule],
+  imports: [IonCardContent, IonChip, IonLabel, IonAvatar, IonButton, IonCard, IonItem, CommonModule, FormsModule],
 })
 export class PostCardComponent {
+  constructor(
+    private modalCtrl : ModalController
+  ) { }
+  @Input() postId: number = 0;
   @Input() avatar: string = '';
   @Input() username: string = '';
   @Input() location: string = '';
@@ -23,9 +29,11 @@ export class PostCardComponent {
   @Input() title: string = '';
   @Input() liked : boolean = false;
   @Input() favorite : boolean = false;
+  @Input() commentsData: Comment[] = [];
   
   @Output() likeEvent = new EventEmitter<boolean>();
   @Output() favoriteEvent = new EventEmitter<boolean>();
+
 
   localImage: string = ''; 
 
@@ -92,5 +100,18 @@ async loadImage(url: string) {
   
   fav(){
     this.favoriteEvent.emit(this.favorite);
+  }
+  
+  async openCommentsModal(){
+    const modal = await this.modalCtrl.create({
+        component: CommentsModalComponent,
+          presentingElement: document.querySelector('ion-router-outlet')!,
+          cssClass: 'comments-modal',
+          componentProps: {
+            comments: this.commentsData,
+            postId: this.postId
+          }
+    });
+    await modal.present();
   }
 }

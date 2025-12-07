@@ -1,0 +1,35 @@
+<ion-content class="ion-padding comments-container">
+
+  <!-- Contenedor flex -->
+  <div class="comments-wrapper">
+
+    <!-- Lista de comentarios scrollable -->
+    <div class="comments-list">
+      <ion-list>
+        <ion-item *ngFor="let comment of comments">
+          <ion-avatar slot="start">
+            <img [src]="comment.user.avatar_url" alt="avatar" />
+          </ion-avatar>
+          <ion-label>
+            <h3>{{ comment.user.name }}</h3>
+            <p>{{ comment.content }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <!-- Input fijo abajo -->
+    <div class="comment-input">
+      <ion-item>
+        <ion-textarea 
+          placeholder="Escribe un comentario..." 
+          [(ngModel)]="newComment"
+          rows="2">
+        </ion-textarea>
+        <ion-button slot="end" (click)="addComment()">Enviar</ion-button>
+      </ion-item>
+    </div>
+
+  </div>
+
+</ion-content>
