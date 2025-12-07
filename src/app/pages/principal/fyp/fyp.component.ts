@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonContent, IonList, IonItem, IonAvatar, IonLabel, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, } from "@ionic/angular/standalone";
+import { IonContent, IonList, IonItem, IonAvatar, IonLabel, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonProgressBar } from "@ionic/angular/standalone";
 import { PostCardComponent } from "src/app/components/cards/post-card/post-card.component";
 import { Post } from 'src/app/models/Post';
 import { DataService } from 'src/app/services/data/data-service';
@@ -11,7 +11,7 @@ import { PostService } from 'src/app/services/post/post-service';
   selector: 'app-fyp',
   templateUrl: './fyp.component.html',
   styleUrls: ['./fyp.component.scss'],
-  imports: [IonInfiniteScrollContent, IonInfiniteScroll,IonList, IonContent, PostCardComponent, CommonModule, IonItem],
+  imports: [IonProgressBar, IonInfiniteScrollContent, IonInfiniteScroll,IonList, IonContent, PostCardComponent, CommonModule, IonItem],
 })
 export class FypComponent  implements OnInit {
   posts : Post[] = [];
@@ -71,7 +71,7 @@ export class FypComponent  implements OnInit {
   }
 
    selectedProfile(userId: number){ {
-        this.router.navigate([`/profile/${userId}`], { 
+        this.router.navigate([`/home/profile/${userId}`], { 
           replaceUrl: false, 
           state: { animation: { direction: 'forward' } } 
         });

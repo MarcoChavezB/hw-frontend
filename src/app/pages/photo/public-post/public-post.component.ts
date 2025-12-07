@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
-import { IonHeader, NavController, IonToolbar, IonContent, IonCard, IonButton, IonLabel, IonItem, IonTextarea, IonText, IonInput, IonAvatar, IonTitle, IonChip, IonCardContent, IonIcon, IonList } from "@ionic/angular/standalone";
+import { LoadingController, NavController, ToastController, IonContent, IonCard, IonButton, IonLabel, IonItem, IonTextarea, IonText, IonInput, IonAvatar, IonTitle, IonChip, IonCardContent, IonIcon, IonList } from "@ionic/angular/standalone";
 import { Hashtag } from 'src/app/models/Hashtag';
 import { UserData } from 'src/app/models/User';
 import { CameraWebService } from 'src/app/services/camera-web-service';
@@ -39,7 +39,10 @@ export class PublicPostComponent implements OnInit {
     showSuggestions = false;
     navCtrl = inject(NavController)
 
-    constructor() {
+    constructor(
+        private loadingCtrl: LoadingController,
+        private toastCtrl : ToastController
+    ) {
         this.router.events.subscribe(event => {
             if (event instanceof NavigationEnd) {
                 this.img = localStorage.getItem('latestPhoto') || '';
@@ -101,11 +104,16 @@ export class PublicPostComponent implements OnInit {
         this.showSuggestions = false;
     }
 
+  async showLoading(message: string = 'Cargando...') {
+    const loading = await this.loadingCtrl.create({
+      message: message,
+    });
 
+    loading.present();
+  }
+  
     async publishPost() {
-    
-        const coords = await this.locationService.getLocation();
-    
+        this.showLoading('Publicando...');
         const body = {
             title: this.title,
             description: this.content,
@@ -115,12 +123,21 @@ export class PublicPostComponent implements OnInit {
             longitude: this.coords?.lon ?? null
         };
         this.postService.createPost(body).subscribe(
-            (response) => {
-                console.log('Post publicado con éxito:', response);
-                this.navCtrl.back();
+            async (response) => {
+                await this.loadingCtrl.dismiss();
+                this.loadingCtrl.dismiss();
+                this.toastCtrl.create({
+                  message: "Post publicado con éxito.",
+                  duration: 3000,
+                }).then(toast => toast.present());
+                this.router.navigate(['/'], { replaceUrl: true, state: { animation: { direction: 'back' } } });
             },
-            (error) => {
-                console.error('Error al publicar el post:', error);
+            async (error) => {
+                await this.loadingCtrl.dismiss();
+                this.toastCtrl.create({
+                  message: "Error al publicar el post. Por favor, intenta de nuevo.",
+                  duration: 3000,
+                }).then(toast => toast.present());
             }
         );
     }
@@ -128,7 +145,7 @@ export class PublicPostComponent implements OnInit {
 
     takePhoto() {
         this.photoService.startCamera();
-        this.router.navigate(['/camera-view']);
+        this.router.navigate(['/home/camera-view']);
         this.img = localStorage.getItem('latestPhoto') || '';
     }
 

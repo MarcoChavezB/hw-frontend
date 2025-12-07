@@ -5,7 +5,7 @@
     <div class="container">
 
       <div class="logo-container">
-        <ion-img src="../../../../assets/icon/logo-black.png"></ion-img>
+        <ion-img src="/assets/icons/logo-black.png"></ion-img>
       </div>
       <h2 class="ion-margin-bottom">HiddenWays</h2>
 
@@ -17,10 +17,22 @@
             <ion-label position="floating">Aqui tu nombre</ion-label>
             <ion-input type="text" formControlName="name"></ion-input>
           </ion-item>
+          <ion-item>
+            <ion-label position="floating">Aqui tu apodo</ion-label>
+            <ion-input (input)="checkNamedTaken()" type="text" formControlName="preferredName"></ion-input>
+          </ion-item>
+            <ion-text color="danger" *ngIf="isNameTaken">
+                <p>Este apodo ya está en uso</p>
+          </ion-text>
           <ion-text color="danger" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
             <p>Ingresa tu nombre</p>
           </ion-text>
-          <ion-button expand="block" (click)="nextStep()" [disabled]="registerForm.get('name')?.invalid">Siguiente</ion-button>
+          <ion-text color="danger" *ngIf="registerForm.get('preferredName')?.invalid && registerForm.get('preferredName')?.touched">
+            <p>Ingresa tu apodo</p>
+          </ion-text>
+          <ion-button expand="block" (click)="nextStep()" 
+            [disabled]="registerForm.get('name')?.invalid || registerForm.get('preferredName')?.invalid || isNameTaken"
+          >Siguiente</ion-button>
           <ion-button fill="clear" (click)="goToLogin()">
             Volver
           </ion-button>
@@ -41,10 +53,34 @@
           </ion-button>
 
         </div>
-
         <div *ngIf="step === 3" [formGroup]="registerForm">
+          <h3>Elige una contraseña</h3>
+          <ion-item>
+            <ion-label position="floating">Contraseña</ion-label>
+            <ion-input type="password" formControlName="password"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Confirmar Contraseña</ion-label>
+            <ion-input type="password" formControlName="confirmPassword"></ion-input>
+          </ion-item>
+            <ion-text color="danger" *ngIf="isPasswordMismatch">
+                <p>Las contraseñas no coinciden</p>
+          </ion-text>
+          <ion-text color="danger" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+            <p>La contraseña es requerida</p>
+          </ion-text>
+          <ion-text color="danger" *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
+            <p>Confirma tu contraseña</p>
+          </ion-text>
+          <ion-button expand="block" (click)="register()" [disabled]="registerForm.get('confirmPassword')?.invalid">Ultimo paso</ion-button>
+          <ion-button fill="clear" (click)="prevStep()">
+            Volver
+          </ion-button>
+        </div>
+        
+        <div *ngIf="step === 4" [formGroup]="registerForm">
           <h3>Confirma tu correo</h3>
-          <p>Vale, para confirmar que te pertenece el correo hemos enviado un codigo de confirmación a {{ registerForm.get('email')?.value }}</p>
+          <p>Vale, como ultimoo paso para confirmar que te pertenece el correo hemos enviado un codigo de confirmación a {{ registerForm.get('email')?.value }}</p>
           <ion-item>
             <ion-label position="floating">Código de confirmación</ion-label>
             <ion-input type="text" formControlName="code"></ion-input>
@@ -52,30 +88,14 @@
           <ion-text color="danger" *ngIf="registerForm.get('code')?.invalid && registerForm.get('code')?.touched">
             <p>Ingresa el código</p>
           </ion-text>
-          <ion-button expand="block" (click)="nextStep()" [disabled]="registerForm.get('code')?.invalid">Siguiente</ion-button>
+          <ion-button expand="block" (click)="verifyEmail()" [disabled]="registerForm.get('code')?.invalid">Siguiente</ion-button>
           <ion-button fill="clear" (click)="prevStep()">
             Volver
           </ion-button>
 
-        </div>
-
-        <div *ngIf="step === 4" [formGroup]="registerForm">
-          <h3>Elige una contraseña</h3>
-          <ion-item>
-            <ion-label position="floating">Contraseña</ion-label>
-            <ion-input type="password" formControlName="password"></ion-input>
-          </ion-item>
-          <ion-text color="danger" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
-            <p>Ingresa una contraseña</p>
-          </ion-text>
-          <ion-button expand="block" (click)="register()" [disabled]="registerForm.get('password')?.invalid">Registrarse</ion-button>
-          <ion-button fill="clear" (click)="prevStep()">
-            Volver
-          </ion-button>
         </div>
 
       </div>
     </div>
   </div>
-
 </ion-content>

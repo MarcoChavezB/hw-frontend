@@ -31,6 +31,8 @@ export class CameraViewComponent  implements OnInit, OnDestroy {
       }
     });
   }
+
+
   
   ngOnDestroy(): void {
       this.stopCamera();
@@ -65,7 +67,7 @@ export class CameraViewComponent  implements OnInit, OnDestroy {
     const file = event.target.files[0];
     if (!file) return;
     this.cameraService.handleFile(file).then(() => {
-      this.navCtrl.navigateForward('/upload');
+      this.navCtrl.navigateForward('/home/upload');
     });
   }
 
@@ -81,8 +83,7 @@ capturePhoto() {
 
   this.videoRef.nativeElement.srcObject = null;
 
-  // Navegar a upload
-  this.navCtrl.navigateForward('/upload', { animated: true });
+  this.navCtrl.navigateForward('/home/upload', { animated: true });
 }
 
 }

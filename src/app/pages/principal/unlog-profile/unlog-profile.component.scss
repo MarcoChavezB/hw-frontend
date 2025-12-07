@@ -1,0 +1,63 @@
+.not-logged-in-page {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  background-color: #ffffff;
+}
+
+.profile-header {
+  text-align: center;
+  padding: 60px 20px;
+
+  .avatar-large {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px auto;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+  }
+
+  .name {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  .username {
+    font-size: 16px;
+    color: gray;
+    margin-bottom: 15px;
+  }
+
+  .bio {
+    font-size: 16px;
+    margin-bottom: 25px;
+    line-height: 1.4;
+  }
+
+  .login-btn {
+    font-weight: 600;
+    margin-bottom: 30px;
+  }
+
+  .stats-grid {
+    h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    p {
+      font-size: 14px;
+      color: gray;
+      margin: 0;
+    }
+  }
+}
+
+
+ion-button {
+    padding-top: 10px;
+    width: 100%;
+    max-width: 350px;
+  --background: #39393a;
+  color: #ffffff;
+}

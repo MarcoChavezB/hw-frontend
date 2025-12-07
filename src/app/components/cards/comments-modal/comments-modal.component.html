@@ -1,9 +1,7 @@
 <ion-content class="ion-padding comments-container">
 
-  <!-- Contenedor flex -->
   <div class="comments-wrapper">
 
-    <!-- Lista de comentarios scrollable -->
     <div class="comments-list">
       <ion-list>
         <ion-item *ngFor="let comment of comments">
@@ -18,8 +16,7 @@
       </ion-list>
     </div>
 
-    <!-- Input fijo abajo -->
-    <div class="comment-input">
+    <div class="comment-input" *ngIf="canComment">
       <ion-item>
         <ion-textarea 
           placeholder="Escribe un comentario..." 
@@ -29,7 +26,8 @@
         <ion-button slot="end" (click)="addComment()">Enviar</ion-button>
       </ion-item>
     </div>
-
-  </div>
-
+    <div class="comment-input" *ngIf="!canComment">
+      <p>Inicia sesión para poder comentar.</p>
+    </div>
+    </div>
 </ion-content>

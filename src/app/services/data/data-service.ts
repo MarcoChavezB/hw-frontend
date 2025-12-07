@@ -248,4 +248,19 @@ export class DataService {
       console.error('Error eliminando posts de IndexedDB', err);
     }
   }
+    async clearAllCache() {
+      try {
+        const db = await this.dbPromise;
+    
+        const tx = db.transaction(db.objectStoreNames, 'readwrite');
+        for (const storeName of db.objectStoreNames) {
+          tx.objectStore(storeName).clear(); 
+        }
+        await tx.done;
+    
+        console.log('Toda la cache de IndexedDB ha sido eliminada correctamente.');
+      } catch (err) {
+        console.error('Error eliminando toda la cache:', err);
+      }
+    }
 }

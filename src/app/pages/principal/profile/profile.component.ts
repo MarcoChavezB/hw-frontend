@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { PostCardComponent } from "src/app/components/cards/post-card/post-card.component";
-import { IonContent, IonAvatar, IonButton, IonItem, IonList, IonSegmentButton, IonSegment, IonGrid, IonRow, IonCol } from "@ionic/angular/standalone";
+import { IonContent, IonAvatar, IonButton, IonItem, IonList, IonSegmentButton, IonSegment, IonGrid, IonRow, IonCol, IonAlert } from "@ionic/angular/standalone";
 import { CommonModule } from '@angular/common';
 import { Post, User } from 'src/app/models/Post';
 import { PostService } from 'src/app/services/post/post-service';
@@ -8,15 +8,39 @@ import { DataService } from 'src/app/services/data/data-service';
 import { UserData } from 'src/app/models/User';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth/auth-service';
-import { ActivatedRoute } from '@angular/router';
+import type { OverlayEventDetail } from '@ionic/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
-  imports: [IonCol, IonRow, IonGrid, IonSegment, IonSegmentButton, IonList, IonItem, IonButton, IonAvatar, IonContent, IonContent, IonItem, IonList, PostCardComponent, IonAvatar, CommonModule, FormsModule]
+  imports: [IonAlert, IonCol, IonRow, IonGrid, IonSegment, IonSegmentButton, IonList, IonItem, IonButton, IonAvatar, IonContent, IonContent, IonItem, IonList, PostCardComponent, IonAvatar, CommonModule, FormsModule]
 })
 export class ProfileComponent implements OnInit {
+  router = inject(Router)
+  public alertButtons = [
+    {
+      text: 'Cerrar',
+      role: 'cancel',
+      handler: () => {
+      },
+    },
+    {
+      text: 'Aceptar',
+      role: 'confirm',
+      handler: () => {
+        this.logout();
+      },
+    },
+  ];
+  
+    logout(){
+        localStorage.clear();
+        this.dataService.clearAllCache();
+        this.router.navigate(['login'], { replaceUrl: true, state: { animation: { direction: 'back' } } });
+    }
+    
     posts : Post[] = [];
     favPosts : Post[] = [];
     likedPosts : Post[] = [];
@@ -25,7 +49,10 @@ export class ProfileComponent implements OnInit {
     authService = inject(AuthService)
     userId: number = 0;
     user : UserData | null = null; 
-  
+    showFollowButton: boolean = false;
+    alreadyFollowing: boolean = false;
+    userAuthId: number = 0;
+    
   constructor() { }
   
   ngOnInit(): void {
@@ -43,18 +70,24 @@ export class ProfileComponent implements OnInit {
     this.getMyPosts();
     this.getLikedPosts();
     this.getSavedPosts();
+    this.userAuthId = (await this.dataService.obtenerUserData())?.user.id || 0;
+    this.showFollowButton = this.userId !== this.userAuthId;
+    console.log('User ID:', this.userId);
+    console.log('Authenticated User ID:', this.userAuthId);
   }
   
-   getUserData(){
+    getUserData(){
         this.authService.getUserProfileData(this.userId).subscribe({
-            next: (response) => {
+            next: async (response) => {
                 this.user = response;
+                this.alreadyFollowing = this.user?.user.followers.map(u => u.id).includes(this.userAuthId);
             },
             error: (error) => {
                 console.error('Error fetching user data:', error);
             }
         });
-   }
+    }
+
   
     async getMyPosts() {
       try {
@@ -144,4 +177,15 @@ getFilteredPosts() {
   return [];
 }
 
+    toggleFollowUser(){
+        this.alreadyFollowing = !this.alreadyFollowing;
+        this.authService.toggleFollowUser(this.userId).subscribe({
+            next: (response) => {
+                this.alreadyFollowing = response.state; 
+            },
+            error: (error) => {
+                this.alreadyFollowing = !this.alreadyFollowing;
+            }
+        });
+    }
 }

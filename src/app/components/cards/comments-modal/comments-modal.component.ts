@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonItemDivider, IonItem, IonTextarea, ModalController ,IonButton , IonModal, IonContent, IonList, IonAvatar, IonLabel, IonHeader, IonToolbar } from "@ionic/angular/standalone";
 import { Comment } from 'src/app/models/Post';
 import { UserData } from 'src/app/models/User';
+import { AuthService } from 'src/app/services/auth/auth-service';
 import { CommentService } from 'src/app/services/comment-service';
 import { DataService } from 'src/app/services/data/data-service';
 
@@ -11,7 +12,7 @@ import { DataService } from 'src/app/services/data/data-service';
   selector: 'app-comments-modal',
   templateUrl: './comments-modal.component.html',
   styleUrls: ['./comments-modal.component.scss'],
-  imports: [IonLabel, IonAvatar, IonList, IonContent, IonButton, IonTextarea, IonItem, IonItemDivider, CommonModule, FormsModule]
+  imports: [IonLabel, IonAvatar, IonList, IonContent, IonButton, IonTextarea, IonItem, CommonModule, FormsModule]
 })
 export class CommentsModalComponent implements OnInit {
   @Input() comments: Comment[] = [];
@@ -19,11 +20,14 @@ export class CommentsModalComponent implements OnInit {
   constructor(private modalCtrl: ModalController) {}
   commentService = inject(CommentService)
   dataService = inject(DataService)
+  authService = inject(AuthService)
   newComment: string = '';
   userData : UserData | null = null;
+  canComment: boolean = true;
   
   async ngOnInit(){
       this.userData = await this.dataService.obtenerUserData();
+      this.canComment = await this.authService.isAuthenticated();
   }
 
   closeModal() {

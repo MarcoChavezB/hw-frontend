@@ -2,23 +2,45 @@
 
 <div class="profile-header">
   <ion-avatar class="avatar-large">
-    <img [src]="user?.user?.avatar_url" />
+    <img [src]="user?.user?.avatar_url || '/assets/default.jpeg'" />
   </ion-avatar>
 
-  <h2 class="name">{{ user?.user?.name }}</h2>
+  <h2 class="name">
+    {{ user?.user?.name }}
+    </h2>
   <p class="preferred-name">@{{ user?.user?.preferred_name }}</p>
-
+  <ion-button id="present-alert">Cerrar sesión</ion-button>
+    <ion-alert
+      trigger="present-alert"
+      header="Alerta!"
+      message="¿Estás seguro de que deseas cerrar sesión?"
+      [buttons]="alertButtons"
+    ></ion-alert>
+  <ion-button
+  (click)="toggleFollowUser()"
+  [disabled]="alreadyFollowing"
+  *ngIf="showFollowButton && alreadyFollowing" type="submit">
+    {{ alreadyFollowing ? 'Siguiendo' : 'Seguir' }}
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="20" color="#ffffff" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 4V20M20 12H4" />
+    </svg>
+  </ion-button>
+      
   <p class="bio" *ngIf="user?.user?.bio">{{ user?.user?.bio }}</p>
 
   <ion-grid>
     <ion-row>
       <ion-col class="text-center">
-        <h3>{{ user?.user?.followerd?.length || 0 }}</h3>
+        <h3>{{ user?.user?.followers?.length || 0 }}</h3>
         <p>Seguidores</p>
       </ion-col>
       <ion-col class="text-center">
         <h3>{{ user?.user?.following?.length || 0 }}</h3>
         <p>Seguidos</p>
+      </ion-col>
+      <ion-col class="text-center">
+        <h3>{{ posts.length || 0 }}</h3>
+        <p>Publicaciones</p>
       </ion-col>
     </ion-row>
   </ion-grid>

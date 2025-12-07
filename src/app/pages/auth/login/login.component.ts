@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonInput, IonText, IonButton, IonImg } from "@ionic/angular/standalone";
+import { IonHeader, ToastController, LoadingController, IonContent, IonItem, IonLabel, IonInput, IonText, IonButton, IonImg } from "@ionic/angular/standalone";
 import { AuthService } from 'src/app/services/auth/auth-service';
 import { DataService } from 'src/app/services/data/data-service';
 
@@ -16,31 +16,53 @@ export class LoginComponent  implements OnInit {
   loginForm!: FormGroup;
   authService = inject(AuthService);
   dataService = inject(DataService);
-  constructor(private fb: FormBuilder, private router: Router) {}
+  deferredPrompt: any = null;
+  showInstallButton = true;
+  loading : boolean = false;
+  
+  constructor(private fb: FormBuilder, private router: Router,     private toastCtrl: ToastController,
+    private loadingCtrl: LoadingController) {}
 
   ngOnInit() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
-  }
+    window.addEventListener('beforeinstallprompt', (event: any) => {
+      event.preventDefault();
+      this.deferredPrompt = event;
+      this.showInstallButton = true;
+    });
 
+  }
+ async showLoading(message: string = 'Cargando...') {
+    const loading = await this.loadingCtrl.create({
+      message: message,
+    });
+
+    loading.present();
+  }
   login()  {
     if (!this.loginForm.valid) {
         return;
     }
-    
+    this.showLoading("Iniciando sesión...");
     const { email, password } = this.loginForm.value;
     this.authService.login(email, password).subscribe({
       next: async (response) => {
         this.dataService.guardarUserData(response);
-        
-        const cachedData = await this.dataService.obtenerUserData();
-        console.log('Datos cacheados en IndexedDB:', cachedData);
-
-        
+        this.loadingCtrl.dismiss();
+        this.loading = false;
         this.goToFyp();
-      },
+      }, error: async (error) => {
+        this.loading = false;
+        const toast = await this.toastCtrl.create({
+          message: 'Error al iniciar sesión. Por favor, verifica tus credenciales.',
+          duration: 3000,
+        });
+        this.loadingCtrl.dismiss();
+        toast.present();
+      }
     });
   }
 
@@ -49,7 +71,20 @@ export class LoginComponent  implements OnInit {
   }
   
   goToFyp() {
-    this.router.navigate(['/fyp']);
+    this.router.navigate(['']);
+  }
+  installPWA(): void {
+    if (this.deferredPrompt) {
+      this.deferredPrompt.prompt();
+      this.deferredPrompt.userChoice.then((choiceResult: any) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('PWA instalada');
+        } else {
+          console.log('PWA no instalada');
+        }
+        this.deferredPrompt = null;
+      });
+    }
   }
 
 }

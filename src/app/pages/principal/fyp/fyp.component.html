@@ -1,4 +1,5 @@
 <ion-content>
+  
   <ion-list>
     <ion-item *ngFor="let post of posts" lines="none">
       <app-post-card
@@ -17,6 +18,7 @@
         (likeEvent)="likePost(post.id, post)"
         (favoriteEvent)="savePost(post.id, post)"
         (showProfileEvent)="selectedProfile(post.post_by.id)"
+        [createdAt]="post.created_at"
         [postId]="post.id"
         [commentsData]="post.comments"
       >

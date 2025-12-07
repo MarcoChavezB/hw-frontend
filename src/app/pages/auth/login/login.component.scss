@@ -1,10 +1,8 @@
-/* login.page.scss */
-
 .container {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* centra vertical */
-  align-items: center;     /* centra horizontal */
+  justify-content: center;
+  align-items: center;
   height: 100%;
   padding: 20px;
   box-sizing: border-box;
@@ -30,16 +28,17 @@ h2 {
 }
 
 .login-form ion-item {
-  border-radius: 8px;
+  --border-radius: 8px;
   margin-bottom: 15px;
 }
 
 ion-button {
-    padding-top: 10px;
-    width: 100%;
-    max-width: 350px;
+  padding-top: 10px;
+  width: 100%;
+  max-width: 350px;
   --background: #39393a;
-  color: #ffffff;
+  --color: #ffffff;
+  --border-radius: 8px;
 }
 
 .register-text {

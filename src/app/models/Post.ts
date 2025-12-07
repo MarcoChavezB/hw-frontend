@@ -12,6 +12,7 @@ export interface Post {
   id: number
   title: string
   description: string
+  created_at: string
   photos: string[]
   already_saved: boolean
   already_liked: boolean

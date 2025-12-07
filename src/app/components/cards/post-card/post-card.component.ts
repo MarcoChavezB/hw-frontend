@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, input, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, input, Input, OnInit, Output } from '@angular/core';
 import { IonItem, IonButton, IonIcon, IonCard, ModalController ,IonAvatar, IonLabel, IonChip, IonCardContent, IonImg, IonGrid, IonRow, IonCol, IonItemDivider } from "@ionic/angular/standalone";
 import { Directory, Filesystem } from '@capacitor/filesystem';
 import { FormsModule } from '@angular/forms';
 import { CommentsModalComponent } from '../comments-modal/comments-modal.component';
 import { Comment } from 'src/app/models/Post';
+import { AuthService } from 'src/app/services/auth/auth-service';
+import { UnlogModalComponent } from '../unlog-modal/unlog-modal.component';
 
 @Component({
   selector: 'app-post-card',
@@ -30,13 +32,16 @@ export class PostCardComponent {
   @Input() liked : boolean = false;
   @Input() favorite : boolean = false;
   @Input() commentsData: Comment[] = [];
-  
+  @Input() createdAt: string = '';
+   
   @Output() likeEvent = new EventEmitter<boolean>();
   @Output() favoriteEvent = new EventEmitter<boolean>();
   @Output() showProfileEvent = new EventEmitter<void>();
 
   localImage: string = ''; 
 
+  authService = inject(AuthService);
+  
   async ngOnInit() {
     if (this.image) {
       await this.loadImage(this.image);
@@ -94,13 +99,34 @@ async loadImage(url: string) {
   }
   
   
-  like(){
+  async like(){
+    if(!await this.authService.isAuthenticated()){
+      await this.openLoginPrompt();
+      return;
+    }
     this.likeEvent.emit(this.liked);
   }
   
-  fav(){
+  async fav(){
+    if(!await this.authService.isAuthenticated()){
+      await this.openLoginPrompt();
+      return;
+    }
     this.favoriteEvent.emit(this.favorite);
   }
+  
+    async openLoginPrompt() {
+      const modal = await this.modalCtrl.create({
+        component: UnlogModalComponent,
+        cssClass: 'login-prompt-modal',
+        animated: true,
+        backdropDismiss: true,
+        initialBreakpoint: 0.25,
+        breakpoints: [0, 0.25]
+      });
+    
+      await modal.present();
+    }
   
     showProfile(){
       this.showProfileEvent.emit();
