@@ -35,7 +35,36 @@ export class FypComponent  implements OnInit {
   }
   
   onIonInfinite(event: InfiniteScrollCustomEvent) {
-    console.log('Cargando más datos...');
+  }
+  
+  likePost(postId: number, post : Post){
+    post.already_liked = !post.already_liked;
+    post.likes.length += post.already_liked ? 1 : -1;
+    this.postService.toggleLikePost(postId).subscribe({
+        next: (response) => {
+            post.already_liked = response.state;
+        },
+        error: (error) => {
+            console.error('Error toggling like:', error);
+            post.already_liked = !post.already_liked;
+            post.likes.length += post.already_liked ? 1 : -1;
+        }
+    });
+  }
+  
+  savePost(postId: number, post: Post){
+    post.already_saved = !post.already_saved;
+    post.saves.length += post.already_saved ? 1 : -1;
+    this.postService.toggleSavePost(postId).subscribe({
+        next: (response) => {
+            console.log('Post save state toggled:', response);
+        },
+        error: (error) => {
+            console.error('Error toggling save:', error);
+            post.already_saved = !post.already_saved;
+            post.saves.length += post.already_saved ? 1 : -1;
+        }
+    });
   }
 
 }

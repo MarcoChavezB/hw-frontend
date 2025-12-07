@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, Input, OnInit } from '@angular/core';
-import { IonItem, IonButton, IonIcon, IonCard, IonAvatar, IonLabel, IonChip, IonCardContent, IonImg, IonGrid, IonRow, IonCol } from "@ionic/angular/standalone";
+import { Component, EventEmitter, input, Input, OnInit, Output } from '@angular/core';
+import { IonItem, IonButton, IonIcon, IonCard, IonAvatar, IonLabel, IonChip, IonCardContent, IonImg, IonGrid, IonRow, IonCol, IonItemDivider } from "@ionic/angular/standalone";
 import { formatDate } from '@angular/common';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 
@@ -8,7 +8,7 @@ import { Directory, Filesystem } from '@capacitor/filesystem';
   selector: 'app-post-card',
   templateUrl: './post-card.component.html',
   styleUrls: ['./post-card.component.scss'],
-  imports: [IonCol, IonRow, IonGrid, IonImg, IonCardContent, IonChip, IonLabel, IonAvatar, IonButton, IonCard, IonItem, CommonModule],
+  imports: [IonCardContent, IonChip, IonLabel, IonAvatar, IonButton, IonCard, IonItem, CommonModule],
 })
 export class PostCardComponent {
   @Input() avatar: string = '';
@@ -18,9 +18,16 @@ export class PostCardComponent {
   @Input() content: string = '';
   @Input() likes : number = 0;
   @Input() comments : number = 0;
+  @Input() favorites : number = 0;
   @Input() hashtags: string[] = []; 
+  @Input() title: string = '';
+  @Input() liked : boolean = false;
+  @Input() favorite : boolean = false;
+  
+  @Output() likeEvent = new EventEmitter<boolean>();
+  @Output() favoriteEvent = new EventEmitter<boolean>();
 
-  localImage: string = ''; // ruta local para el <img>
+  localImage: string = ''; 
 
   async ngOnInit() {
     if (this.image) {
@@ -32,19 +39,16 @@ async loadImage(url: string) {
   try {
     const filename = this.hashCode(url) + '.jpg';
 
-    // Intentamos leer archivo local
     const file = await Filesystem.readFile({
       path: filename,
       directory: Directory.Data
     }).catch(() => null);
 
     if (file) {
-      // Ya existe localmente → usamos directamente
       this.localImage = `data:image/jpeg;base64,${file.data}`;
-      return; // <-- muy importante, salimos antes de fetch
+      return;
     }
 
-    // Si no existe localmente → descargamos
     const response = await fetch(url);
     const blob = await response.blob();
     const base64 = (await this.convertBlobToBase64(blob)) as string;
@@ -76,8 +80,17 @@ async loadImage(url: string) {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       hash = (hash << 5) - hash + str.charCodeAt(i);
-      hash |= 0; // Convertir a 32bit
+      hash |= 0;
     }
     return hash.toString();
+  }
+  
+  
+  like(){
+    this.likeEvent.emit(this.liked);
+  }
+  
+  fav(){
+    this.favoriteEvent.emit(this.favorite);
   }
 }

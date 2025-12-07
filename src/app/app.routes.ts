@@ -13,6 +13,14 @@ export const routes: Routes = [
         path: 'profile',
         loadComponent: () => import('./pages/principal/profile/profile.component').then(m => m.ProfileComponent)
       },
+      {
+        path: 'upload',
+        loadComponent: () => import('./pages/photo/public-post/public-post.component').then(m => m.PublicPostComponent)
+      },
+      {
+        path: 'camera-view',
+        loadComponent: () => import('./pages/photo/camera-view/camera-view.component').then(m => m.CameraViewComponent)
+      }
     ]
   },
   {

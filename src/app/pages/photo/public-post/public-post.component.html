@@ -1,0 +1,82 @@
+<ion-content class="ion-padding">
+
+  <ion-card class="post-card">
+    <ion-item lines="none">
+      <ion-avatar slot="start">
+        <img [src]="avatar" alt="avatar" />
+      </ion-avatar>
+
+      <ion-label>
+        <h2>{{ username }}</h2>
+
+        <ion-chip color="medium">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"
+            color="#ffffff" fill="none" stroke="#ffffff" stroke-width="1.5">
+            <path
+              d="M13.6177 21.367C13.1841 21.773 12.6044 22 12.0011 22C11.3978 22 10.8182 21.773 10.3845 21.367C6.41302 17.626 1.09076 13.4469 3.68627 7.37966C5.08963 4.09916 8.45834 2 12.0011 2C15.5439 2 18.9126 4.09916 20.316 7.37966C22.9082 13.4393 17.599 17.6389 13.6177 21.367Z" />
+          </svg>
+
+            <ion-label>{{ location }}</ion-label>
+        </ion-chip>
+
+      </ion-label>
+    </ion-item>
+
+    <ion-card-content>
+    <ion-textarea
+        placeholder="Titulo del post..."
+        [(ngModel)]="title">
+      </ion-textarea>
+      <ion-textarea
+        placeholder="Escribe la descripción del post..."
+        [(ngModel)]="content">
+      </ion-textarea>
+
+      <div class="hashtags">
+        <ion-chip  *ngFor="let tag of hashtagsSelected">
+          <ion-label>#{{ tag.name }}</ion-label>
+            <svg (click)="removeTag(tag)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="28" color="#979797" fill="none" stroke="#979797" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6L6.00081 17.9992M17.9992 18L6 6.00085" />
+            </svg>
+        </ion-chip>
+      </div>
+    <ion-item>
+      <ion-input 
+        placeholder="#agregarHashtag"
+        [(ngModel)]="newTag"
+        (ionInput)="onTagInputChange()"
+        >
+      </ion-input>    
+    </ion-item>
+
+<div *ngIf="showSuggestions" class="suggestions">
+  <ion-list>
+    <ion-item 
+      button 
+      *ngFor="let tag of filteredHashtags"
+      (click)="selectSuggestedTag(tag)">
+      <ion-label>#{{ tag.name }}</ion-label>
+    </ion-item>
+  </ion-list>
+</div>
+
+
+    </ion-card-content>
+    <img 
+      [src]="img || '/assets/placeholder.png'" 
+      class="single-img rounded-img" />
+
+    <ion-button expand="block" (click)="takePhoto()">
+        Cambiar Foto
+    </ion-button>
+
+<ion-button 
+  expand="block" 
+  (click)="publishPost()"
+  [disabled]="!content || content.trim().length < 1 || !title || title.trim().length < 1">
+  Publicar
+</ion-button>
+    
+  </ion-card>
+
+</ion-content>
