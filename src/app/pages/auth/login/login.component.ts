@@ -76,11 +76,19 @@ export class LoginComponent  implements OnInit {
   installPWA(): void {
     if (this.deferredPrompt) {
       this.deferredPrompt.prompt();
-      this.deferredPrompt.userChoice.then((choiceResult: any) => {
+      this.deferredPrompt.userChoice.then(async (choiceResult: any) => {
         if (choiceResult.outcome === 'accepted') {
-          console.log('PWA instalada');
+        const toast = await this.toastCtrl.create({
+          message: 'Se ha iniciado la instalación de la Hidden Ways.',
+          duration: 3000,
+        });
+        await toast.present();
         } else {
-          console.log('PWA no instalada');
+            const toast = await this.toastCtrl.create({
+              message: 'La instalación de la Hidden Ways fue cancelada.',
+              duration: 3000,
+            });
+            await toast.present();
         }
         this.deferredPrompt = null;
       });
