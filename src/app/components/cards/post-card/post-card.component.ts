@@ -33,7 +33,7 @@ export class PostCardComponent {
   
   @Output() likeEvent = new EventEmitter<boolean>();
   @Output() favoriteEvent = new EventEmitter<boolean>();
-
+  @Output() showProfileEvent = new EventEmitter<void>();
 
   localImage: string = ''; 
 
@@ -101,6 +101,10 @@ async loadImage(url: string) {
   fav(){
     this.favoriteEvent.emit(this.favorite);
   }
+  
+    showProfile(){
+      this.showProfileEvent.emit();
+    }
   
   async openCommentsModal(){
     const modal = await this.modalCtrl.create({

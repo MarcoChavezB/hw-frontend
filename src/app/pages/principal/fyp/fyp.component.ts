@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { IonContent, IonList, IonItem, IonAvatar, IonLabel, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, } from "@ionic/angular/standalone";
 import { PostCardComponent } from "src/app/components/cards/post-card/post-card.component";
 import { Post } from 'src/app/models/Post';
@@ -16,22 +17,24 @@ export class FypComponent  implements OnInit {
   posts : Post[] = [];
   postService = inject(PostService);
   dataService = inject(DataService);
-  
+  router = inject(Router);
   ngOnInit() {
     this.fetchPosts();
   }
   
   async fetchPosts() {
-    this.posts = await this.dataService.obtenerPostData() || [];
-    
-    this.postService.getPosts().subscribe({
-        next: async (response) => {
-            await this.dataService.guardarPostData(response.data);
-            this.posts = response.data;
-        }, error: (error) => {
-            console.log('usando datos cacheados debido a un error en la solicitud:', error);
-        }
-    })  
+    try {
+      const response = await this.postService.getPosts().toPromise();
+      if (!response!.success || response!.data.length === 0) {
+        this.posts = [];
+        await this.dataService.clearPostData();
+      } else {
+        this.posts = response!.data;
+        await this.dataService.guardarPostData(response!.data);
+      }
+    } catch (error) {
+      this.posts = await this.dataService.obtenerPostData() || [];
+    }
   }
   
   onIonInfinite(event: InfiniteScrollCustomEvent) {
@@ -67,4 +70,11 @@ export class FypComponent  implements OnInit {
     });
   }
 
+   selectedProfile(userId: number){ {
+        this.router.navigate([`/profile/${userId}`], { 
+          replaceUrl: false, 
+          state: { animation: { direction: 'forward' } } 
+        });
+    }
+   }
 }

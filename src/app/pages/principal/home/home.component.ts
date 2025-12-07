@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { IonHeader, IonContent, IonToolbar, IonTitle, IonFooter, IonRouterOutlet, IonButtons, IonImg, IonApp, IonMenu, IonMenuButton, IonButton, IonIcon } from "@ionic/angular/standalone";
+import { IonHeader, NavController ,IonContent, IonToolbar, IonTitle, IonFooter, IonRouterOutlet, IonButtons, IonImg, IonApp, IonMenu, IonMenuButton, IonButton, IonIcon } from "@ionic/angular/standalone";
+import { DataService } from 'src/app/services/data/data-service';
 
 @Component({
   selector: 'app-home',
@@ -8,15 +9,20 @@ import { IonHeader, IonContent, IonToolbar, IonTitle, IonFooter, IonRouterOutlet
   styleUrls: ['./home.component.scss'],
   imports: [IonIcon, IonButton, IonApp, IonButtons, IonRouterOutlet, IonTitle, IonToolbar, IonHeader, IonContent, IonFooter, IonMenu, IonMenuButton],
 })
-export class HomeComponent  implements OnInit {
+export class HomeComponent  {
 
-  constructor() { }
+  constructor(
+  ) { }
   
   router = inject(Router);
+  dataService = inject(DataService)
   
-  ngOnInit() {}
 
-    goTo(route: string){
-        this.router.navigate([`/${route}`]);
-    }
+goTo(route: string, userId?: string) {
+  const path = userId ? [route, userId] : [route]; 
+  this.router.navigate(path, { 
+    replaceUrl: false, 
+    state: { animation: { direction: 'forward' } } 
+  });
+}
 }

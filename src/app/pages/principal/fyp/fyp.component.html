@@ -16,13 +16,11 @@
         [favorite]="post.already_saved"
         (likeEvent)="likePost(post.id, post)"
         (favoriteEvent)="savePost(post.id, post)"
+        (showProfileEvent)="selectedProfile(post.post_by.id)"
         [postId]="post.id"
         [commentsData]="post.comments"
       >
       </app-post-card>
     </ion-item>
   </ion-list>
-  <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
-    <ion-infinite-scroll-content></ion-infinite-scroll-content>
-  </ion-infinite-scroll>
 </ion-content>

@@ -50,7 +50,7 @@ export class DataService {
       return null;
     }
   }
-
+  
   async eliminarUserData() {
     try {
       const db = await this.dbPromise;
@@ -170,6 +170,7 @@ export class DataService {
     }
   }
   
+  /// favoritos
   async clearCachedSavedPosts(userId: number) {
     try {
       const db = await this.dbPromise;
@@ -217,6 +218,8 @@ export class DataService {
     }
   }
 
+
+// fyp
   async guardarPostData(posts: Post[]) {
     try {
       const db = await this.dbPromise;

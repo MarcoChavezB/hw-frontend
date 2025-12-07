@@ -13,5 +13,6 @@ export const environment = {
   postByUser: (userId: number) => `${baseURL}fyp/posts/${userId}`,
   postLikedByUser: (userId: number) => `${baseURL}fyp/post/profile/likes/${userId}`,
   postSavedByUser: (userId: number) => `${baseURL}fyp/post/profile/saved/${userId}`,
-  postCommentStore: (postId: number) => `${baseURL}comments/store/${postId}`
+  postCommentStore: (postId: number) => `${baseURL}comments/store/${postId}`,
+  getUserProfileData: (userId: number) => `${baseURL}user/get/profile/data/${userId}`,
 };

@@ -1,41 +1,60 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { PostCardComponent } from "src/app/components/cards/post-card/post-card.component";
-import { IonContent, IonAvatar, IonButton, IonItem, IonList, IonSegmentButton, IonSegment } from "@ionic/angular/standalone";
+import { IonContent, IonAvatar, IonButton, IonItem, IonList, IonSegmentButton, IonSegment, IonGrid, IonRow, IonCol } from "@ionic/angular/standalone";
 import { CommonModule } from '@angular/common';
 import { Post, User } from 'src/app/models/Post';
 import { PostService } from 'src/app/services/post/post-service';
 import { DataService } from 'src/app/services/data/data-service';
 import { UserData } from 'src/app/models/User';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from 'src/app/services/auth/auth-service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
-  imports: [IonSegment, IonSegmentButton, IonList, IonItem, IonButton, IonAvatar, IonContent, IonContent, IonItem, IonList, PostCardComponent, IonAvatar, CommonModule, FormsModule]
+  imports: [IonCol, IonRow, IonGrid, IonSegment, IonSegmentButton, IonList, IonItem, IonButton, IonAvatar, IonContent, IonContent, IonItem, IonList, PostCardComponent, IonAvatar, CommonModule, FormsModule]
 })
-export class ProfileComponent {
-
+export class ProfileComponent implements OnInit {
     posts : Post[] = [];
     favPosts : Post[] = [];
     likedPosts : Post[] = [];
     postService = inject(PostService);
     dataService = inject(DataService);
+    authService = inject(AuthService)
     userId: number = 0;
     user : UserData | null = null; 
+  
   constructor() { }
+  
+  ngOnInit(): void {
+    const urlSegments = window.location.pathname.split('/');
+    this.userId = Number(urlSegments[urlSegments.length - 1]);
+  }
 
   async ionViewWillEnter() {
-    this.userId = await this.dataService.obtenerUserData().then(data => data ? data.user.id : 0);
-    await this.getUserData();
-    await this.getMyPosts();
-    await this.getLikedPosts();
-    await this.getSavedPosts();
+    if (isNaN(this.userId) || this.userId === 0) {
+        this.user = await this.dataService.obtenerUserData();
+        this.userId = this.user?.user.id || 0;
+    }else {
+        this.getUserData();
+    }
+    this.getMyPosts();
+    this.getLikedPosts();
+    this.getSavedPosts();
   }
   
-  async getUserData() {
-    this.user = await this.dataService.obtenerUserData();
-  }
+   getUserData(){
+        this.authService.getUserProfileData(this.userId).subscribe({
+            next: (response) => {
+                this.user = response;
+            },
+            error: (error) => {
+                console.error('Error fetching user data:', error);
+            }
+        });
+   }
   
     async getMyPosts() {
       try {
@@ -81,8 +100,6 @@ export class ProfileComponent {
           this.favPosts = await this.dataService.getCachedSavedPosts(this.userId) || [];
         }
     }
-
-
 
   likePost(postId: number, post : Post){
     post.already_liked = !post.already_liked;

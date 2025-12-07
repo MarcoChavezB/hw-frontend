@@ -13,4 +13,8 @@ export class AuthService {
   login(email: string, password: string): Observable<UserData> {
     return this.http.post<UserData>(environment.userLogin, { email, password });
   }
+  
+  getUserProfileData(userId: number): Observable<UserData>{
+    return this.http.get<UserData>(environment.getUserProfileData(userId));
+  }
 }
