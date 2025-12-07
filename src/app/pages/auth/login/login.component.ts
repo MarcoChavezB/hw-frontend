@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { IonHeader, ToastController, LoadingController, IonContent, IonItem, IonLabel, IonInput, IonText, IonButton, IonImg } from "@ionic/angular/standalone";
 import { AuthService } from 'src/app/services/auth/auth-service';
 import { DataService } from 'src/app/services/data/data-service';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,7 @@ export class LoginComponent  implements OnInit {
   deferredPrompt: any = null;
   showInstallButton = true;
   loading : boolean = false;
-  
+  version = environment.version;  
   constructor(private fb: FormBuilder, private router: Router,     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController) {}
 
