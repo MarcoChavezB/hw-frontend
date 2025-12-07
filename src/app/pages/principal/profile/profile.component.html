@@ -2,35 +2,43 @@
 
   <div class="profile-header">
     <ion-avatar class="avatar-large">
-      <img [src]="user.avatar" />
+      <img [src]="user?.user?.avatar_url" />
     </ion-avatar>
 
-    <h2 class="name">{{ user.name }}</h2>
-    <p class="preferred-name">@{{ user.preferred }}</p>
+    <h2 class="name">{{ user?.user?.name }}</h2>
+    <p class="preferred-name">@{{ user?.user?.preferred_name }}</p>
 
-    <p class="bio" *ngIf="user.bio">{{ user.bio }}</p>
+    <p class="bio" *ngIf="user?.user?.bio">{{ user?.user?.bio }}</p>
 
-    <ion-button shape="round" fill="outline" class="edit-btn">
-      Editar Perfil
-    </ion-button>
   </div>
 
   <ion-item lines="full" class="divider"></ion-item>
 
   <div class="section-title">
-    <h3>Publicaciones</h3>
+    <h3>Mis publicaciones</h3>
   </div>
 
   <ion-list class="post-list">
-    <app-post-card
-      *ngFor="let post of posts"
-      [avatar]="user.avatar"
-      [username]="user.name"
-      [location]="post.location"
-      [content]="post.content"
-      [image]="post.image"
-    >
-    </app-post-card>
+    <ion-item *ngFor="let post of posts" lines="none">
+      <app-post-card
+        [avatar]="post.post_by.avatar_url"
+        [username]="post.post_by.name"
+        location="mexico"
+        [title]="post.title"
+        [content]="post.description"
+        [image]="post.photos[0]"
+        [hashtags]="post.hashtags"
+        [likes]="post.likes.length"
+        [favorites]="post.saves.length"
+        [comments]="post.comments.length"
+        [liked]="post.already_liked"
+        [favorite]="post.already_saved"
+        (likeEvent)="likePost(post.id, post)"
+        (favoriteEvent)="savePost(post.id, post)"
+      >
+      </app-post-card>
+    </ion-item>
+
   </ion-list>
 
 </ion-content>

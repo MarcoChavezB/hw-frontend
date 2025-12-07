@@ -10,4 +10,5 @@ export const environment = {
   
   toggleLikePost: (postId: number) => `${baseURL}fyp/posts/toggle/like/${postId}`,
   toggleSavePost: (postId: number) => `${baseURL}fyp/posts/toggle/save/${postId}`,
+  postByUser: (userId: number) => `${baseURL}fyp/posts/${userId}`,
 };

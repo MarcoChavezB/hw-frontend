@@ -63,6 +63,25 @@ export class DataService {
   // ==========================
   // Posts
   // ==========================
+  async putChachedPostUser(userId: number, posts: Post[]) {
+    try {
+      const db = await this.dbPromise;
+      await db.put('postData', { id: userId, posts });
+    } catch (err) {
+      console.error('Error guardando posts por usuario en IndexedDB', err);
+    }
+  }
+
+  async getCachedPostsUser(userId: number): Promise<Post[] | null> {
+    try {
+      const db = await this.dbPromise;
+      const data = await db.get('postData', userId);
+      return data?.posts ?? null;
+    } catch (err) {
+      console.error('Error leyendo posts por usuario de IndexedDB', err);
+      return null;
+    }
+  }
 
   async guardarPostData(posts: Post[]) {
     try {

@@ -15,6 +15,10 @@ export class PostService {
         return this.http.get<PostRequest>(environment.fypPosts);
     }
     
+    getMyPosts(userId: number): Observable<PostRequest> {
+        return this.http.get<PostRequest>(environment.postByUser(userId));
+    }
+    
     getHastags(): Observable<HashtagResponse> {
         return this.http.get<HashtagResponse>(environment.hashtags);
     }
