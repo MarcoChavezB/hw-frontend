@@ -5,6 +5,8 @@ import { UserData } from 'src/app/models/User';
 import { environment } from 'src/environments/environment.prod';
 import { DataService } from '../data/data-service';
 import { ToggleResponse } from 'src/app/models/Post';
+import { VersionReadyEvent } from '@angular/service-worker';
+import { VersionResponse } from 'src/app/models/Version';
 
 @Injectable({
   providedIn: 'root',
