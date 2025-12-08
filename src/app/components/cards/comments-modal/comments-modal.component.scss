@@ -1,6 +1,17 @@
-ion-content {
+ion-content, .comments-list {
   --background: #000;
   color: #fff;
+}
+
+.comments-list{
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+ion-header{
+  --background: #000;
+  margin-bottom: 20px;
+
 }
 
 ion-list {

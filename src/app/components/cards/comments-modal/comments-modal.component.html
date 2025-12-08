@@ -1,33 +1,38 @@
 <ion-content class="ion-padding comments-container">
+    <div class="comments-wrapper">
+        <div>
+            <ion-header>
+                <ion-toolbar>
+                    <ion-title>Comentarios</ion-title>
+                    <ion-buttons slot="end">
+                        <ion-button (click)="closeModal()">Cerrar</ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <div class="comments-list">
+                <ion-list>
+                    <ion-item *ngFor="let comment of comments">
+                        <ion-avatar slot="start">
+                            <img [src]="comment.user.avatar_url || '/assets/default.jpeg'" alt="avatar" />
+                        </ion-avatar>
+                        <ion-label>
+                            <h3>{{ comment.user.name }}</h3>
+                            <p>{{ comment.content }}</p>
+                        </ion-label>
+                    </ion-item>
+                </ion-list>
+            </div>
+        </div>
 
-  <div class="comments-wrapper">
-
-    <div class="comments-list">
-      <ion-list>
-        <ion-item *ngFor="let comment of comments">
-          <ion-avatar slot="start">
-            <img [src]="comment.user.avatar_url || '/assets/default.jpeg'" alt="avatar" />
-          </ion-avatar>
-          <ion-label>
-            <h3>{{ comment.user.name }}</h3>
-            <p>{{ comment.content }}</p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-    </div>
-
-    <div class="comment-input" *ngIf="canComment">
-      <ion-item>
-        <ion-textarea
-          placeholder="Escribe un comentario..."
-          [(ngModel)]="newComment"
-          rows="2">
-        </ion-textarea>
-        <ion-button slot="end" (click)="addComment()">Enviar</ion-button>
-      </ion-item>
-    </div>
-    <div class="comment-input" *ngIf="!canComment">
-      <p>Inicia sesión para poder comentar.</p>
-    </div>
+        <div class="comment-input" *ngIf="canComment">
+            <ion-item>
+                <ion-textarea placeholder="Escribe un comentario..." [(ngModel)]="newComment" rows="2">
+                </ion-textarea>
+                <ion-button slot="end" (click)="addComment()">Enviar</ion-button>
+            </ion-item>
+        </div>
+        <div class="comment-input" *ngIf="!canComment">
+            <p>Inicia sesión para poder comentar.</p>
+        </div>
     </div>
 </ion-content>
