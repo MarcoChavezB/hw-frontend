@@ -5,13 +5,12 @@ ion-content, .comments-list {
 
 .comments-list{
     overflow-y: auto;
-    max-height: 60vh;
+    max-height: 40vh;
 }
 
 ion-header{
   --background: #000;
   margin-bottom: 20px;
-
 }
 
 ion-list {

@@ -5,40 +5,41 @@ import { VersionService } from './services/version-service';
 import { UpdateService } from './services/update-service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: 'app.component.html',
-  imports: [IonAlert, IonApp, IonRouterOutlet],
+    selector: 'app-root',
+    templateUrl: 'app.component.html',
+    imports: [IonAlert, IonApp, IonRouterOutlet],
 })
 export class AppComponent {
 
-  constructor(
-    private alertCtrl: AlertController,
-    private versionService: VersionService,
-    private updateService: UpdateService
-  ) {
-    this.subscribeToVersionAlerts();
-  }
+    constructor(
+        private alertCtrl: AlertController,
+        private versionService: VersionService,
+        private updateService: UpdateService
+    ) {
+        this.subscribeToVersionAlerts();
+        document.body.classList.add('dark');
+    }
 
-  subscribeToVersionAlerts() {
-    this.versionService.versionInvalid$.subscribe(async (invalid) => {
-      if (invalid) {
-        const alert = await this.alertCtrl.create({
-          header: "Nueva versión disponible!",
-          message: "Hay una nueva versión de la aplicación. Por favor, actualiza para continuar usando la última versión.",
-          buttons: [
-            {
-              text: 'Actualizar',
-              role: 'confirm',
-              handler: () => {
-                this.updateService.forceUpdate();
-              }
+    subscribeToVersionAlerts() {
+        this.versionService.versionInvalid$.subscribe(async (invalid) => {
+            if (invalid) {
+                const alert = await this.alertCtrl.create({
+                    header: "Nueva versión disponible!",
+                    message: "Hay una nueva versión de la aplicación. Por favor, actualiza para continuar usando la última versión.",
+                    buttons: [
+                        {
+                            text: 'Actualizar',
+                            role: 'confirm',
+                            handler: () => {
+                                this.updateService.forceUpdate();
+                            }
+                        }
+                    ],
+                    backdropDismiss: false
+                });
+
+                await alert.present();
             }
-          ],
-          backdropDismiss: false
         });
-
-        await alert.present();
-      }
-    });
-  }
+    }
 }
