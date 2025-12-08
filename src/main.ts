@@ -28,12 +28,13 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     importProvidersFrom(HttpClientModule),
     provideRouter(routes, withPreloading(PreloadAllModules)),
-    provideServiceWorker('ngsw-worker.js', {
+    provideServiceWorker('sw-master.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'
-    }),
+    })
   ],
 })
 .then(() => {
   defineCustomElements(window);
 });
+

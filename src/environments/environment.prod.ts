@@ -1,5 +1,5 @@
-//const baseURL = 'http://127.0.0.1:8000/api/';
-const baseURL = 'https://hw-api.on-forge.com/api/';
+const baseURL = 'http://127.0.0.1:8000/api/';
+//const baseURL = 'https://hw-api.on-forge.com/api/';
 
 export const environment = {
   version: '1.2.4',
@@ -11,9 +11,9 @@ export const environment = {
   hashtags: `${baseURL}fyp/hashtags`,
   createPost: `${baseURL}fyp/posts/store`,
   userRegister: `${baseURL}auth/register`,
-  verifyEmail: `${baseURL}auth/verify-email`,  
+  verifyEmail: `${baseURL}auth/verify-email`,
   getUserNamesList: `${baseURL}auth/users/names`,
-  
+
   toggleLikePost: (postId: number) => `${baseURL}fyp/posts/toggle/like/${postId}`,
   toggleSavePost: (postId: number) => `${baseURL}fyp/posts/toggle/save/${postId}`,
   postByUser: (userId: number) => `${baseURL}fyp/posts/${userId}`,
