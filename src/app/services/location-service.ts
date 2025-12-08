@@ -23,8 +23,7 @@ export class LocationService {
           resolve(null);
         },
         {
-          enableHighAccuracy: true,
-          timeout: 5000
+          enableHighAccuracy: false,
         }
       );
     });

@@ -2,7 +2,7 @@
 const baseURL = 'https://hw-api.on-forge.com/api/';
 
 export const environment = {
-  version: '1.2.2',
+  version: '1.2.3',
   versionCheck: `${baseURL}version`,
   production: false,
   userLogin: `${baseURL}auth/user/login`,
