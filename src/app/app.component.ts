@@ -17,9 +17,7 @@ export class AppComponent {
         private updateService: UpdateService
     ) {
         this.subscribeToVersionAlerts();
-        document.body.classList.add('dark');
     }
-
     subscribeToVersionAlerts() {
         this.versionService.versionInvalid$.subscribe(async (invalid) => {
             if (invalid) {
