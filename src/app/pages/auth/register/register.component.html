@@ -30,7 +30,7 @@
           <ion-text color="danger" *ngIf="registerForm.get('preferredName')?.invalid && registerForm.get('preferredName')?.touched">
             <p>Ingresa tu apodo</p>
           </ion-text>
-          <ion-button expand="block" (click)="nextStep()" 
+          <ion-button expand="block" (click)="nextStep()"
             [disabled]="registerForm.get('name')?.invalid || registerForm.get('preferredName')?.invalid || isNameTaken"
           >Siguiente</ion-button>
           <ion-button fill="clear" (click)="goToLogin()">
@@ -66,18 +66,24 @@
             <ion-text color="danger" *ngIf="isPasswordMismatch">
                 <p>Las contraseñas no coinciden</p>
           </ion-text>
+          <ion-text color="danger" *ngIf="registerForm.get('password')?.errors?.['minlength'] && registerForm.get('password')?.touched">
+            <p>La contraseña debe tener al menos 6 caracteres</p>
+          </ion-text>
           <ion-text color="danger" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
             <p>La contraseña es requerida</p>
           </ion-text>
           <ion-text color="danger" *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
             <p>Confirma tu contraseña</p>
           </ion-text>
-          <ion-button expand="block" (click)="register()" [disabled]="registerForm.get('confirmPassword')?.invalid">Ultimo paso</ion-button>
+            <re-captcha (resolved)="onRecaptchaResolved($event)" siteKey="6LfgSCUsAAAAAMvb2AqfifMf2V17sXip3YyLNDVu">
+            </re-captcha>
+
+          <ion-button expand="block" (click)="register()" [disabled]="registerForm.get('confirmPassword')?.invalid || !recaptchaToken">Ultimo paso</ion-button>
           <ion-button fill="clear" (click)="prevStep()">
             Volver
           </ion-button>
         </div>
-        
+
         <div *ngIf="step === 4" [formGroup]="registerForm">
           <h3>Confirma tu correo</h3>
           <p>Vale, como ultimoo paso para confirmar que te pertenece el correo hemos enviado un codigo de confirmación a {{ registerForm.get('email')?.value }}</p>
@@ -98,4 +104,5 @@
       </div>
     </div>
   </div>
+
 </ion-content>

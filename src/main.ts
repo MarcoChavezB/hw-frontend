@@ -11,29 +11,30 @@ import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { HttpClientModule, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './app/Interceptor/AuthInterceptor';
 import { VersionService } from './app/services/version-service';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 export function versionInitializer(versionService: VersionService) {
-  return () => versionService.validateVersion();
+    return () => versionService.validateVersion();
 }
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
-    {
-      provide: APP_INITIALIZER,
-      multi: true,
-      useFactory: versionInitializer,
-      deps: [VersionService],
-    },
-    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
-    importProvidersFrom(HttpClientModule),
-    provideRouter(routes, withPreloading(PreloadAllModules)),
-    provideServiceWorker('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      registrationStrategy: 'registerWhenStable:30000'
-    }),
-  ],
+    providers: [
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+        provideIonicAngular(),
+        {
+            provide: APP_INITIALIZER,
+            multi: true,
+            useFactory: versionInitializer,
+            deps: [VersionService],
+        },
+        provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+        importProvidersFrom(HttpClientModule),
+        provideRouter(routes, withPreloading(PreloadAllModules)),
+        provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+        }),
+    ],
 })
-.then(() => {
-  defineCustomElements(window);
-});
+    .then(() => {
+        defineCustomElements(window);
+    });

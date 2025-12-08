@@ -6,7 +6,7 @@
       <ion-img src="/assets/icons/logo-black.png"></ion-img>
     </div>
     <h2>HiddenWays {{ version }}</h2>
-    
+
     <form [formGroup]="loginForm" class="login-form">
 
       <ion-item>
@@ -24,13 +24,14 @@
       <ion-text color="danger" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
         <p>Ingresa tu contraseña</p>
       </ion-text>
-
-      <ion-button expand="block" type="submit" [disabled]="loginForm.invalid || loading" (click)="login()">
-        Iniciar Sesión
-      </ion-button>
+        <re-captcha (resolved)="onRecaptchaResolved($event)" siteKey="6LfgSCUsAAAAAMvb2AqfifMf2V17sXip3YyLNDVu">
+        </re-captcha>
+          <ion-button expand="block" type="submit" [disabled]="loginForm.invalid || loading || !recaptchaToken" (click)="login()">
+            Iniciar Sesión
+          </ion-button>
     </form>
       <ion-button *ngIf="showInstallButton" expand="block" type="button" (click)="installPWA()">
-        Instalar aplicación 
+        Instalar aplicación
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="50" height="23" color="#ffffff" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M17 6C16.9855 4.29344 16.8908 3.35264 16.2702 2.73223C15.5378 2 14.3591 2 12.0016 2H9.001C6.64351 2 5.46476 2 4.73238 2.73223C4 3.46447 4 4.64298 4 7V17C4 19.357 4 20.5355 4.73238 21.2678C5.46476 22 6.64351 22 9.001 22H12.0016C14.3591 22 15.5378 22 16.2702 21.2678C16.8908 20.6473 16.9855 19.7065 17 17.9999" />
             <path d="M12.5 2H8.5L9 3H12L12.5 2Z" />
