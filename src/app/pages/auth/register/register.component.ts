@@ -17,7 +17,7 @@ import { AuthService } from 'src/app/services/auth/auth-service';
             useValue: { siteKey: '6LdkpCIsAAAAABlXRbHBhYjm_GQM_Y89N6lOnEzh' },
         }
     ],
-    imports: [IonAlert, RecaptchaModule, IonButton, IonText, IonInput, IonLabel, IonImg, IonContent, IonItem, CommonModule, ReactiveFormsModule, FormsModule]
+    imports: [RecaptchaModule, IonButton, IonText, IonInput, IonLabel, IonImg, IonContent, IonItem, CommonModule, ReactiveFormsModule, FormsModule]
 })
 export class RegisterComponent implements OnInit {
 
@@ -29,11 +29,14 @@ export class RegisterComponent implements OnInit {
     isNameTaken = false;
     isPasswordMismatch = false;
     recaptchaToken: string | null = null;
+    recaptchaTokenCode: string | null = null;
 
     onRecaptchaResolved(token: string | null) {
         this.recaptchaToken = token;
     }
-
+    onRecaptchaCodeResolved(token: string | null) {
+        this.recaptchaTokenCode = token;
+    }
     constructor(
         private fb: FormBuilder,
         private router: Router,
@@ -48,6 +51,15 @@ export class RegisterComponent implements OnInit {
             password: ['', [Validators.required, Validators.minLength(6)]],
             confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
             preferredName: ['', Validators.required],
+            phone: [
+                '',
+                [
+                    Validators.required,
+                    Validators.minLength(10),
+                    Validators.maxLength(15),
+                    Validators.pattern(/^[+]?[0-9]{10,15}$/),
+                ],
+            ],
         });
     }
 
@@ -101,6 +113,18 @@ export class RegisterComponent implements OnInit {
         }
     }
 
+    async validatePhone() {
+        const phoneControl = this.registerForm.get('phone');
+        if (phoneControl?.invalid) {
+            const toast = await this.toastCtrl.create({
+                message: 'Por favor, ingresa un número de teléfono válido.',
+                duration: 3000,
+            });
+            await toast.present();
+            return;
+        }
+        this.nextStep();
+    }
     async register() {
         if (!this.recaptchaToken) {
             this.presentAlert();
@@ -112,6 +136,7 @@ export class RegisterComponent implements OnInit {
             return;
         }
 
+
         await this.showLoading('Enviando codigo...');
         this.authService.register(
             this.registerForm.get('name')?.value,
@@ -119,7 +144,8 @@ export class RegisterComponent implements OnInit {
             this.registerForm.get('password')?.value,
             this.registerForm.get('confirmPassword')?.value,
             this.registerForm.get('preferredName')?.value,
-            this.recaptchaToken
+            this.recaptchaToken,
+            '+52' + this.registerForm.get('phone')?.value
         ).subscribe({
             next: async (response) => {
                 if ((window as any).grecaptcha) {
@@ -130,7 +156,6 @@ export class RegisterComponent implements OnInit {
                     message: response.message,
                     duration: 3000,
                 }).then(toast => toast.present());
-                this.registerForm.reset();
                 this.nextStep();
             },
             error: async (error) => {
@@ -148,24 +173,26 @@ export class RegisterComponent implements OnInit {
     }
 
     verifyEmail() {
-        this.showLoading('Verificanto correo solo un momento mas...');
+        this.showLoading('Verificanto codigo solo un momento mas...');
         this.authService.verifyEmail(
             this.registerForm.get('email')?.value,
-            this.registerForm.get('code')?.value
+            this.registerForm.get('code')?.value,
+            this.recaptchaTokenCode ?? ''
         ).subscribe({
             next: async (response) => {
                 const toast = await this.toastCtrl.create({
-                    message: 'Correo verificado correctamente. Ya puedes iniciar sesión.',
+                    message: 'Numero de telefono verificado correctamente. Ya puedes iniciar sesión.',
                     duration: 3000,
                     color: 'success'
                 });
                 await toast.present();
                 this.goToLogin();
                 this.loadingCtrl.dismiss();
+                this.registerForm.reset()
             },
             error: async (error) => {
                 const toast = await this.toastCtrl.create({
-                    message: 'Error al verificar el correo. Por favor, intenta de nuevo.',
+                    message: 'Error al verificar el numero. Por favor, intenta de nuevo.',
                     duration: 3000,
                     color: 'danger'
                 });

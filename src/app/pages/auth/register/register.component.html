@@ -39,19 +39,25 @@
         </div>
 
         <div *ngIf="step === 2" [formGroup]="registerForm">
-          <h3>Hola {{ registerForm.get('name')?.value }} ahora necesitas ingresar una direccion de correo</h3>
-          <ion-item>
-            <ion-label position="floating">Correo</ion-label>
-            <ion-input type="email" formControlName="email"></ion-input>
-          </ion-item>
-          <ion-text color="danger" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
-            <p>Ingresa un correo válido</p>
-          </ion-text>
-          <ion-button expand="block" (click)="nextStep()" [disabled]="registerForm.get('email')?.invalid">Siguiente</ion-button>
-          <ion-button fill="clear" (click)="prevStep()">
-            Volver
-          </ion-button>
-
+            <h3>Hola {{ registerForm.get('name')?.value }} ahora necesitas ingresar una dirección de correo y número de teléfono</h3>
+            <ion-item>
+                <ion-label position="floating">Correo</ion-label>
+                <ion-input type="email" formControlName="email"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="floating">Número de teléfono</ion-label>
+                <ion-input type="tel" formControlName="phone"></ion-input>
+            </ion-item>
+            <ion-text color="danger" *ngIf="registerForm.get('phone')?.hasError('pattern') && registerForm.get('phone')?.touched">
+                <p>El número de teléfono debe tener entre 10 y 15 dígitos y puede incluir un "+" al inicio.</p>
+            </ion-text>
+            <ion-text color="danger" *ngIf="registerForm.get('phone')?.hasError('required') && registerForm.get('phone')?.touched">
+                <p>El número de teléfono es obligatorio.</p>
+            </ion-text>
+            <ion-button expand="block" (click)="validatePhone()" [disabled]="registerForm.get('email')?.invalid || registerForm.get('phone')?.invalid">
+                Siguiente
+            </ion-button>
+            <ion-button fill="clear" (click)="prevStep()">Volver</ion-button>
         </div>
         <div *ngIf="step === 3" [formGroup]="registerForm">
           <h3>Elige una contraseña</h3>
@@ -85,8 +91,8 @@
         </div>
 
         <div *ngIf="step === 4" [formGroup]="registerForm">
-          <h3>Confirma tu correo</h3>
-          <p>Vale, como ultimoo paso para confirmar que te pertenece el correo hemos enviado un codigo de confirmación a {{ registerForm.get('email')?.value }}</p>
+          <h3>Confirma tu telefono</h3>
+          <p>Vale, como ultimo paso para confirmar que te pertenece el telefono hemos enviado un codigo de confirmación a {{ registerForm.get('phone')?.value }}</p>
           <ion-item>
             <ion-label position="floating">Código de confirmación</ion-label>
             <ion-input type="text" formControlName="code"></ion-input>
@@ -94,6 +100,8 @@
           <ion-text color="danger" *ngIf="registerForm.get('code')?.invalid && registerForm.get('code')?.touched">
             <p>Ingresa el código</p>
           </ion-text>
+            <re-captcha (resolved)="onRecaptchaCodeResolved($event)" siteKey="6LfgSCUsAAAAAMvb2AqfifMf2V17sXip3YyLNDVu">
+            </re-captcha>
           <ion-button expand="block" (click)="verifyEmail()" [disabled]="registerForm.get('code')?.invalid">Siguiente</ion-button>
           <ion-button fill="clear" (click)="prevStep()">
             Volver

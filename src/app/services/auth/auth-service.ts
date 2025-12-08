@@ -23,12 +23,12 @@ export class AuthService {
         return this.http.post<UserData>(environment.userLogin, { email, password, reCaptcha_token });
     }
 
-    register(name: string, email: string, password: string, password_confirmation: string, preferred_name: string, reCaptcha_token: string): Observable<any> {
-        return this.http.post<any>(environment.userRegister, { name, email, password, password_confirmation, preferred_name, reCaptcha_token });
+    register(name: string, email: string, password: string, password_confirmation: string, preferred_name: string, reCaptcha_token: string, phone_number: string): Observable<any> {
+        return this.http.post<any>(environment.userRegister, { name, email, password, password_confirmation, preferred_name, reCaptcha_token, phone_number });
     }
 
-    verifyEmail(email: string, email_code: string): Observable<any> {
-        return this.http.post<any>(environment.verifyEmail, { email, email_code });
+    verifyEmail(email: string, totp: string, reCaptcha_token: string): Observable<any> {
+        return this.http.post<any>(environment.verifyEmail, { email, totp, reCaptcha_token });
     }
 
     getUserProfileData(userId: number): Observable<UserData> {
