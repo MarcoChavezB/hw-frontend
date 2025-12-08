@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonApp, IonRouterOutlet, IonHeader, IonToolbar, AlertController, IonAlert } from '@ionic/angular/standalone';
 import { ExploreContainerComponent } from "./explore-container/explore-container.component";
 import { VersionService } from './services/version-service';
+import { UpdateService } from './services/update-service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,8 @@ export class AppComponent {
 
   constructor(
     private alertCtrl: AlertController,
-    private versionService: VersionService
+    private versionService: VersionService,
+    private updateService: UpdateService
   ) {
     this.subscribeToVersionAlerts();
   }
@@ -28,10 +30,11 @@ export class AppComponent {
               text: 'Actualizar',
               role: 'confirm',
               handler: () => {
-                window.location.reload(); 
+                this.updateService.forceUpdate();
               }
             }
-          ]
+          ],
+          backdropDismiss: false
         });
 
         await alert.present();
