@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonContent, IonList, IonItem, ToastController, IonLabel, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonProgressBar } from "@ionic/angular/standalone";
+import { IonContent, RefresherCustomEvent ,IonList, IonItem, ToastController, IonLabel, IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonProgressBar, IonRefresherContent, IonRefresher } from "@ionic/angular/standalone";
 import { PostCardComponent } from "src/app/components/cards/post-card/post-card.component";
 import { Post } from 'src/app/models/Post';
 import { DataService } from 'src/app/services/data/data-service';
@@ -11,7 +11,7 @@ import { PostService } from 'src/app/services/post/post-service';
   selector: 'app-fyp',
   templateUrl: './fyp.component.html',
   styleUrls: ['./fyp.component.scss'],
-  imports: [IonList, IonContent, PostCardComponent, CommonModule, IonItem],
+  imports: [IonRefresher, IonRefresherContent, IonList, IonContent, PostCardComponent, CommonModule, IonItem],
 })
 export class FypComponent  implements OnInit {
   posts : Post[] = [];
@@ -93,4 +93,10 @@ export class FypComponent  implements OnInit {
         });
     }
    }
+   
+  handleRefresh(event: RefresherCustomEvent) {
+    this.fetchPosts().then(() => {
+      event.target.complete();
+    }); 
+  }
 }

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { PostCardComponent } from "src/app/components/cards/post-card/post-card.component";
-import { IonContent, IonAvatar, IonButton, IonItem, IonList, IonSegmentButton, IonSegment, IonGrid, IonRow, IonCol, IonAlert } from "@ionic/angular/standalone";
+import { IonContent, IonAvatar, RefresherCustomEvent ,IonButton, IonItem, IonList, IonSegmentButton, IonSegment, IonGrid, IonRow, IonCol, IonAlert, IonRefresherContent, IonRefresher } from "@ionic/angular/standalone";
 import { CommonModule } from '@angular/common';
 import { Post, User } from 'src/app/models/Post';
 import { PostService } from 'src/app/services/post/post-service';
@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
-  imports: [IonAlert, IonCol, IonRow, IonGrid, IonSegment, IonSegmentButton, IonList, IonItem, IonButton, IonAvatar, IonContent, IonContent, IonItem, IonList, PostCardComponent, IonAvatar, CommonModule, FormsModule]
+  imports: [IonRefresher, IonRefresherContent, IonAlert, IonCol, IonRow, IonGrid, IonSegment, IonSegmentButton, IonList, IonItem, IonButton, IonAvatar, IonContent, IonContent, IonItem, IonList, PostCardComponent, IonAvatar, CommonModule, FormsModule]
 })
 export class ProfileComponent implements OnInit {
   router = inject(Router)
@@ -188,5 +188,11 @@ getFilteredPosts() {
                 this.alreadyFollowing = !this.alreadyFollowing;
             }
         });
+    }
+    
+  handleRefresh(event: RefresherCustomEvent) {
+    this.ionViewWillEnter().then(() => {
+      event.target.complete();
+    }); 
     }
 }
