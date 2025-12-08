@@ -6,7 +6,7 @@
       <ion-list>
         <ion-item *ngFor="let comment of comments">
           <ion-avatar slot="start">
-            <img [src]="comment.user.avatar_url" alt="avatar" />
+            <img [src]="comment.user.avatar_url || '/assets/default.jpeg'" alt="avatar" />
           </ion-avatar>
           <ion-label>
             <h3>{{ comment.user.name }}</h3>
@@ -18,8 +18,8 @@
 
     <div class="comment-input" *ngIf="canComment">
       <ion-item>
-        <ion-textarea 
-          placeholder="Escribe un comentario..." 
+        <ion-textarea
+          placeholder="Escribe un comentario..."
           [(ngModel)]="newComment"
           rows="2">
         </ion-textarea>

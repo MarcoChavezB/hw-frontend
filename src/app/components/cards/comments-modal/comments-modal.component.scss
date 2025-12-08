@@ -1,6 +1,6 @@
 ion-content {
-  --background: #000; 
-  color: #fff; 
+  --background: #000;
+  color: #fff;
 }
 
 ion-list {
@@ -58,3 +58,10 @@ ion-item[slot] {
   --background: transparent;
 }
 
+.comments-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
+}
