@@ -33,7 +33,18 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
+              },
+              {
+                "glob": "custom-sw.js",
+                "input": "src",
+                "output": "."
+              },
+              {
+                "glob": "sw-master.js",
+                "input": "src",
+                "output": "."
               }
+
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
             "scripts": [],
