@@ -72,8 +72,6 @@ export class ProfileComponent implements OnInit {
     this.getSavedPosts();
     this.userAuthId = (await this.dataService.obtenerUserData())?.user.id || 0;
     this.showFollowButton = this.userId !== this.userAuthId;
-    console.log('User ID:', this.userId);
-    console.log('Authenticated User ID:', this.userAuthId);
   }
   
     getUserData(){
