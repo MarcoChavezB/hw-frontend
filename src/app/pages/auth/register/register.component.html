@@ -119,7 +119,7 @@
                     <p>Vale, como ultimo paso para confirmar que te pertenece el telefono hemos enviado un codigo de confirmación a {{ registerForm.get('phone')?.value }}</p>
                     <ion-item>
                         <ion-label position="floating">Código de confirmación</ion-label>
-                        <ion-input type="text" formControlName="code"></ion-input>
+                        <ion-input type="number" formControlName="code"></ion-input>
                     </ion-item>
                     <ion-text color="danger" *ngIf="registerForm.get('code')?.invalid && registerForm.get('code')?.touched">
                         <p>Ingresa el código</p>
