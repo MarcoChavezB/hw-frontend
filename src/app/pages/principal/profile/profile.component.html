@@ -13,8 +13,7 @@
     </h2>
   <p class="preferred-name">@{{ user?.user?.preferred_name }}</p>
   <ion-row *ngIf="!showFollowButton" style="display: flex;">
-    <ion-button id="present-alert">Cerrar sesión</ion-button>
-    <ion-button id="present-alert" (click)="goToDashboard()"> >
+    <ion-button id="present-alert" (click)="goToDashboard()">
         Ir a mi panel
         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-arrow-out-up-right-icon lucide-square-arrow-out-up-right">
             <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
@@ -22,14 +21,11 @@
             <path d="M15 3h6v6" />
         </svg>
     </ion-button>
+    <ion-button id="present-alert">Cerrar sesión</ion-button>
+    <ion-alert trigger="present-alert" header="Alerta!" message="¿Estás seguro de que deseas cerrar sesión?" [buttons]="alertButtons"></ion-alert>
   </ion-row>
 
-    <ion-alert
-      trigger="present-alert"
-      header="Alerta!"
-      message="¿Estás seguro de que deseas cerrar sesión?"
-      [buttons]="alertButtons"
-    ></ion-alert>
+
   <ion-button
   (click)="toggleFollowUser()"
   *ngIf="showFollowButton && user?.user?.preferred_name" type="submit">

@@ -14,6 +14,10 @@ export const routes: Routes = [
         canActivate: [RedirectIfAuthenticatedGuard]
     },
     {
+        path: 'verify-code',
+        loadComponent: () => import('./Views/auth/code/code.component').then(m => m.CodeComponent),
+    },
+    {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full'

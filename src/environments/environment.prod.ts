@@ -8,6 +8,7 @@ export const environment = {
     hashtags: `${baseURL}fyp/hashtags`,
     createPost: `${baseURL}fyp/posts/store`,
     userRegister: `${baseURL}auth/user/register`,
+    resendVerifyCode: `${baseURL}auth/user/resend-otp`,
     verifyEmail: `${baseURL}auth/user/verify-email`,
     getUserNamesList: `${baseURL}auth/users/names`,
 

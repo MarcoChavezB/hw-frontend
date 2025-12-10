@@ -88,17 +88,38 @@ export class LoginComponent implements OnInit {
                 this.loading = false;
                 this.goToFyp();
             }, error: async (error) => {
+                this.loading = false;
+
+                if (error.error.requires_email_code && this.recaptchaToken) {
+                    this.resentVerifyCode();
+                    this.router.navigate(['/verify-code'], { queryParams: { email: this.loginForm.get('email')?.value } });
+                    this.hiddeLoading();
+                    return;
+                }
                 if ((window as any).grecaptcha) {
                     (window as any).grecaptcha.reset();
                 }
                 this.recaptchaToken = null;
-                this.loading = false;
                 const toast = await this.toastCtrl.create({
                     message: 'Error al iniciar sesión. Por favor, verifica tus credenciales.',
                     duration: 3000,
                 });
                 this.hiddeLoading();
                 toast.present();
+            }
+        });
+    }
+
+    resentVerifyCode() {
+        this.authService.resendVerifyCode(
+            this.loginForm.get('email')?.value,
+        ).subscribe({
+            next: async (response) => {
+                const toast = await this.toastCtrl.create({
+                    message: 'Se envio un codigo a tu numero telefonico por favor confirmalo para continuar.',
+                    duration: 3000,
+                });
+                await toast.present();
             }
         });
     }

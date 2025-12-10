@@ -1,0 +1,30 @@
+
+<ion-content>
+    <div class="center-wrapper">
+        <div class="container">
+            <div class="logo-container">
+                <ion-img src="/assets/icons/logo-black.png"></ion-img>
+            </div>
+            <h2 class="ion-margin-bottom">HiddenWays</h2>
+
+            <div class="step-container">
+                <div [formGroup]="codeForm">
+                    <h3>Confirma tu teléfono</h3>
+                    <p>
+                        Al parecer tu cuenta requiere un código de verificación enviado a tu correo electrónico. Por favor, ingresa el código que has recibido para continuar.
+                    </p>
+                    <ion-item>
+                        <ion-label position="floating">Código de confirmación</ion-label>
+                        <ion-input type="number" formControlName="code"></ion-input>
+                    </ion-item>
+                    <ion-text color="danger" *ngIf="codeForm.get('code')?.invalid && codeForm.get('code')?.touched">
+                        <p>Ingresa el código</p>
+                    </ion-text>
+                    <re-captcha (resolved)="onRecaptchaResolved($event)" siteKey="6LfgSCUsAAAAAMvb2AqfifMf2V17sXip3YyLNDVu">
+                    </re-captcha>
+                    <ion-button expand="block" (click)="submitCode()" [disabled]="codeForm.get('code')?.invalid || !recaptchaTokenCode">Siguiente</ion-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ion-content>
