@@ -34,8 +34,8 @@
                     <ion-button fill="clear" (click)="goToLogin()">
                         Volver
                     </ion-button>
-                    <div class="register-text">
-                        <p>¿Ya tienes cuenta? <a>Inicia sesion</a></p>
+                    <div class="register-text" >
+                        <p>¿Ya tienes cuenta? <a (click)="goToLogin()">Inicia sesion</a></p>
                     </div>
                 </div>
 
@@ -69,7 +69,7 @@
 
                     <ion-button fill="clear" (click)="prevStep()">Volver</ion-button>
                     <div class="register-text">
-                        <p>¿Ya tienes cuenta? <a>Inicia sesion</a></p>
+                        <p>¿Ya tienes cuenta? <a (click)="goToLogin()">Inicia sesion</a></p>
                     </div>
                 </div>
                 <div *ngIf="step === 3" [formGroup]="registerForm">

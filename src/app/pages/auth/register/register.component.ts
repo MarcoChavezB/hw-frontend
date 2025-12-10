@@ -21,7 +21,7 @@ import { AuthService } from 'src/app/services/auth/auth-service';
 })
 export class RegisterComponent implements OnInit {
     authService = inject(AuthService);
-    step = 3;
+    step = 1;
     registerForm: FormGroup;
     namesTaken: string[] = [];
     isLoading = false;
