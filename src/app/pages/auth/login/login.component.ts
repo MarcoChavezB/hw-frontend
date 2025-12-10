@@ -27,7 +27,6 @@ export class LoginComponent implements OnInit {
     deferredPrompt: any = null;
     showInstallButton = true;
     loading: boolean = false;
-    version = environment.version;
     recaptchaToken: string | null = null;
 
     onRecaptchaResolved(token: string | null) {

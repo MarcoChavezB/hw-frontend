@@ -4,28 +4,17 @@ import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalo
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
-import { APP_INITIALIZER, importProvidersFrom, isDevMode } from '@angular/core';
-import { provideServiceWorker } from '@angular/service-worker';
+import { APP_INITIALIZER, importProvidersFrom, isDevMode, ApplicationRef } from '@angular/core';
+import { provideServiceWorker, SwUpdate } from '@angular/service-worker';
 
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { HttpClientModule, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './app/Interceptor/AuthInterceptor';
-import { VersionService } from './app/services/version-service';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-export function versionInitializer(versionService: VersionService) {
-    return () => versionService.validateVersion();
-}
 
 bootstrapApplication(AppComponent, {
     providers: [
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
         provideIonicAngular(),
-        {
-            provide: APP_INITIALIZER,
-            multi: true,
-            useFactory: versionInitializer,
-            deps: [VersionService],
-        },
         provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
         importProvidersFrom(HttpClientModule),
         provideRouter(routes, withPreloading(PreloadAllModules)),
@@ -35,6 +24,33 @@ bootstrapApplication(AppComponent, {
         })
     ],
 })
-    .then(() => {
+    .then((appRef) => {
         defineCustomElements(window);
-    });
+
+        const app = appRef.injector.get(ApplicationRef);
+        const swUpdate = appRef.injector.get(SwUpdate, null);
+
+        if (swUpdate && swUpdate.isEnabled) {
+
+            swUpdate.versionUpdates.subscribe(event => {
+                if (event.type === 'VERSION_READY') {
+                    console.log('Nueva versión detectada:', event);
+
+                    const update = confirm('Hay una nueva versión disponible. ¿Deseas actualizar?');
+
+                    if (update) {
+                        swUpdate.activateUpdate().then(() => {
+                            document.location.reload();
+                        });
+                    }
+                }
+            });
+
+            setInterval(() => {
+                swUpdate.checkForUpdate()
+                    .then(() => console.log('🔍 Check for update ejecutado...'))
+                    .catch(err => console.warn('⚠️ Error al buscar actualización:', err));
+            }, 60 * 1000);
+        }
+    })
+    .catch(err => console.error(err));
