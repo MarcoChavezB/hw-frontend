@@ -196,7 +196,6 @@ export class RegisterComponent implements OnInit {
                 const toast = await this.toastCtrl.create({
                     message: 'Numero de telefono verificado correctamente. Ya puedes iniciar sesión.',
                     duration: 3000,
-                    color: 'success'
                 });
                 await toast.present();
                 this.goToLogin();

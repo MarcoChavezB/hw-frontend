@@ -126,7 +126,7 @@
                     </ion-text>
                     <re-captcha (resolved)="onRecaptchaCodeResolved($event)" siteKey="6LfgSCUsAAAAAMvb2AqfifMf2V17sXip3YyLNDVu">
                     </re-captcha>
-                    <ion-button expand="block" (click)="verifyEmail()" [disabled]="registerForm.get('code')?.invalid">Siguiente</ion-button>
+                    <ion-button expand="block" (click)="verifyEmail()" [disabled]="registerForm.get('code')?.invalid || !recaptchaTokenCode">Siguiente</ion-button>
 
                 </div>
 
