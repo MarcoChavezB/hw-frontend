@@ -189,7 +189,7 @@ export class RegisterComponent implements OnInit {
         this.showLoading('Verificanto codigo solo un momento mas...');
         this.authService.verifyEmail(
             this.registerForm.get('email')?.value,
-            this.registerForm.get('code')?.value,
+            this.registerForm.get('code')?.value.toString(),
             this.recaptchaTokenCode ?? ''
         ).subscribe({
             next: async (response) => {
