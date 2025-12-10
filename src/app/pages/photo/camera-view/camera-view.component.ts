@@ -1,89 +1,95 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CameraWebService } from 'src/app/services/camera-web-service';
-import { IonContent, NavController} from "@ionic/angular/standalone";
+import { IonContent, NavController } from "@ionic/angular/standalone";
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-camera-view',
-  templateUrl: './camera-view.component.html',
-  styleUrls: ['./camera-view.component.scss'],
-  imports: [IonContent],
+    selector: 'app-camera-view',
+    templateUrl: './camera-view.component.html',
+    styleUrls: ['./camera-view.component.scss'],
+    imports: [IonContent, CommonModule],
 })
-export class CameraViewComponent  implements OnInit, OnDestroy {
+export class CameraViewComponent implements OnInit, OnDestroy {
 
-  @ViewChild('video') videoRef!: ElementRef<HTMLVideoElement>;
-  @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
+    @ViewChild('video') videoRef!: ElementRef<HTMLVideoElement>;
+    @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
 
-  stream: MediaStream | null = null;
+    stream: MediaStream | null = null;
 
-  constructor(
-    private navCtrl: NavController,
-    private cameraService: CameraWebService
-  ) {}
+    showTakePhoto: boolean = true;
 
-  ngOnInit() {
-    this.startCamera();
-    this.cameraService.cameraStream$.subscribe(stream => {
-      this.stream = stream;
-      if (stream && this.videoRef?.nativeElement) {
-        this.videoRef.nativeElement.srcObject = stream;
-        this.videoRef.nativeElement.play();
-      }
-    });
-  }
-
-
-  
-  ngOnDestroy(): void {
-      this.stopCamera();
-  }
-
-  async startCamera() {
-    try {
-      await this.cameraService.startCamera();
-    } catch {
-      alert('No se pudo acceder a la cámara.');
+    constructor(
+        private navCtrl: NavController,
+        private cameraService: CameraWebService
+    ) { }
+    ngOnInit() {
+        this.startCamera();
+        this.cameraService.cameraStream$.subscribe(stream => {
+            this.stream = stream;
+            if (stream && this.videoRef?.nativeElement) {
+                this.videoRef.nativeElement.srcObject = stream;
+                this.videoRef.nativeElement.play().then(() => {
+                    // Una vez que el video comienza a reproducirse, habilitamos el botón de captura
+                    this.showTakePhoto = true;
+                });
+            }
+        });
     }
-  }
 
-  switchCamera() {
-    this.cameraService.switchCamera();
-  }
 
-  stopCamera() {
-    this.cameraService.stopCamera();
-  }
 
-  close() {
-    this.stopCamera();
-    this.navCtrl.back();
-  }
+    ngOnDestroy(): void {
+        this.stopCamera();
+    }
 
-  openGallery() {
-    this.fileInputRef.nativeElement.click();
-  }
+    async startCamera() {
+        try {
+            this.showTakePhoto = false;
+            await this.cameraService.startCamera();
+        } catch {
+            alert('No se pudo acceder a la cámara.');
+        }
+    }
+    switchCamera() {
+        this.cameraService.switchCamera();
+    }
 
-  handleFile(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
-    this.cameraService.handleFile(file).then(() => {
-      this.navCtrl.navigateForward('/home/upload');
-    });
-  }
+    stopCamera() {
+        this.cameraService.stopCamera();
+    }
 
-capturePhoto() {
-  if (!this.videoRef?.nativeElement || !this.canvasRef?.nativeElement) return;
+    close() {
+        this.stopCamera();
+        this.navCtrl.back();
+    }
 
-  this.cameraService.capturePhoto(
-    this.videoRef.nativeElement,
-    this.canvasRef.nativeElement
-  );
+    openGallery() {
+        this.fileInputRef.nativeElement.click();
+    }
 
-  this.cameraService.stopCamera();
+    handleFile(event: any) {
+        const file = event.target.files[0];
+        if (!file) return;
+        this.cameraService.handleFile(file).then(() => {
+            this.navCtrl.navigateForward('/home/upload');
+        });
+    }
 
-  this.videoRef.nativeElement.srcObject = null;
+    capturePhoto() {
+        if (!this.showTakePhoto) return;
 
-  this.navCtrl.navigateForward('/home/upload', { animated: true });
-}
+        if (!this.videoRef?.nativeElement || !this.canvasRef?.nativeElement) return;
 
+        this.cameraService.capturePhoto(
+            this.videoRef.nativeElement,
+            this.canvasRef.nativeElement
+        );
+
+        this.cameraService.stopCamera();
+
+        this.videoRef.nativeElement.srcObject = null;
+
+        this.navCtrl.navigateForward('/home/upload', { animated: true });
+    }
 }
