@@ -1,6 +1,6 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
-import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
+import { IonicRouteStrategy, provideIonicAngular, AlertController } from '@ionic/angular/standalone';
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
@@ -21,31 +21,49 @@ bootstrapApplication(AppComponent, {
         provideServiceWorker('sw-master.js', {
             enabled: !isDevMode(),
             registrationStrategy: 'registerWhenStable:30000'
-        })
+        }),
+        AlertController
     ],
 })
-    .then((appRef) => {
+    .then(async (appRef) => {
+
         defineCustomElements(window);
 
         const app = appRef.injector.get(ApplicationRef);
         const swUpdate = appRef.injector.get(SwUpdate, null);
+        const alertCtrl = appRef.injector.get(AlertController);
 
         if (swUpdate && swUpdate.isEnabled) {
 
-            swUpdate.versionUpdates.subscribe(event => {
+            swUpdate.versionUpdates.subscribe(async event => {
+
                 if (event.type === 'VERSION_READY') {
+
                     console.log('Nueva versión detectada:', event);
 
-                    const update = confirm('Hay una nueva versión disponible. ¿Deseas actualizar?');
+                    // ---------- ALERTA IONIC SIN CANCELAR ----------
+                    const alert = await alertCtrl.create({
+                        header: 'Actualización disponible',
+                        message: 'Hay una nueva versión de la aplicación. Se actualizará ahora.',
+                        backdropDismiss: false,
+                        keyboardClose: true,
+                        buttons: [
+                            {
+                                text: 'Actualizar',
+                                handler: () => {
+                                    swUpdate.activateUpdate().then(() => {
+                                        document.location.reload();
+                                    });
+                                }
+                            }
+                        ]
+                    });
 
-                    if (update) {
-                        swUpdate.activateUpdate().then(() => {
-                            document.location.reload();
-                        });
-                    }
+                    await alert.present();
                 }
             });
 
+            // Check periódico
             setInterval(() => {
                 swUpdate.checkForUpdate()
                     .then(() => console.log('🔍 Check for update ejecutado...'))
