@@ -41,7 +41,6 @@ bootstrapApplication(AppComponent, {
 
                     console.log('Nueva versión detectada:', event);
 
-                    // ---------- ALERTA IONIC SIN CANCELAR ----------
                     const alert = await alertCtrl.create({
                         header: 'Actualización disponible',
                         message: 'Hay una nueva versión de la aplicación. Se actualizará ahora.',
@@ -63,11 +62,10 @@ bootstrapApplication(AppComponent, {
                 }
             });
 
-            // Check periódico
             setInterval(() => {
                 swUpdate.checkForUpdate()
-                    .then(() => console.log('🔍 Check for update ejecutado...'))
-                    .catch(err => console.warn('⚠️ Error al buscar actualización:', err));
+                    .then(() => console.log('Check for update ejecutado...'))
+                    .catch(err => console.warn('Error al buscar actualización:', err));
             }, 60 * 1000);
         }
     })

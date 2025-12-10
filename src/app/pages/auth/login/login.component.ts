@@ -41,12 +41,21 @@ export class LoginComponent implements OnInit {
             email: ['', [Validators.required, Validators.email]],
             password: ['', Validators.required],
         });
-        window.addEventListener('beforeinstallprompt', (event: any) => {
-            event.preventDefault();
-            this.deferredPrompt = event;
-            this.showInstallButton = true;
-        });
 
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            this.showInstallButton = false;
+        } else {
+            window.addEventListener('beforeinstallprompt', (event: any) => {
+                event.preventDefault();
+                this.deferredPrompt = event;
+                this.showInstallButton = true;
+            });
+
+            window.addEventListener('appinstalled', () => {
+                this.showInstallButton = false;
+                this.deferredPrompt = null;
+            });
+        }
     }
     async showLoading(message: string = 'Cargando...') {
         const loading = await this.loadingCtrl.create({

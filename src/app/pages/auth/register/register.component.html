@@ -1,116 +1,140 @@
 <ion-content>
 
-  <div class="center-wrapper">
+    <div class="center-wrapper">
 
-    <div class="container">
+        <div class="container">
 
-      <div class="logo-container">
-        <ion-img src="/assets/icons/logo-black.png"></ion-img>
-      </div>
-      <h2 class="ion-margin-bottom">HiddenWays</h2>
+            <div class="logo-container">
+                <ion-img src="/assets/icons/logo-black.png"></ion-img>
+            </div>
+            <h2 class="ion-margin-bottom">HiddenWays</h2>
 
-      <div class="step-container">
+            <div class="step-container">
 
-        <div *ngIf="step === 1" [formGroup]="registerForm">
-          <h3>¿Cómo te gusta que te llamen?</h3>
-          <ion-item>
-            <ion-label position="floating">Aqui tu nombre</ion-label>
-            <ion-input type="text" formControlName="name"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label position="floating">Aqui tu apodo</ion-label>
-            <ion-input (input)="checkNamedTaken()" type="text" formControlName="preferredName"></ion-input>
-          </ion-item>
-            <ion-text color="danger" *ngIf="isNameTaken">
-                <p>Este apodo ya está en uso</p>
-          </ion-text>
-          <ion-text color="danger" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
-            <p>Ingresa tu nombre</p>
-          </ion-text>
-          <ion-text color="danger" *ngIf="registerForm.get('preferredName')?.invalid && registerForm.get('preferredName')?.touched">
-            <p>Ingresa tu apodo</p>
-          </ion-text>
-          <ion-button expand="block" (click)="nextStep()"
-            [disabled]="registerForm.get('name')?.invalid || registerForm.get('preferredName')?.invalid || isNameTaken"
-          >Siguiente</ion-button>
-          <ion-button fill="clear" (click)="goToLogin()">
-            Volver
-          </ion-button>
+                <div *ngIf="step === 1" [formGroup]="registerForm">
+                    <h3>¿Cómo te gusta que te llamen?</h3>
+                    <ion-item>
+                        <ion-label position="floating">Aqui tu nombre</ion-label>
+                        <ion-input type="text" formControlName="name"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="floating">Aqui tu apodo</ion-label>
+                        <ion-input (input)="checkNamedTaken()" type="text" formControlName="preferredName"></ion-input>
+                    </ion-item>
+                    <ion-text color="danger" *ngIf="isNameTaken">
+                        <p>Este apodo ya está en uso</p>
+                    </ion-text>
+                    <ion-text color="danger" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+                        <p>Ingresa tu nombre</p>
+                    </ion-text>
+                    <ion-text color="danger" *ngIf="registerForm.get('preferredName')?.invalid && registerForm.get('preferredName')?.touched">
+                        <p>Ingresa tu apodo</p>
+                    </ion-text>
+                    <ion-button expand="block" (click)="nextStep()" [disabled]="registerForm.get('name')?.invalid || registerForm.get('preferredName')?.invalid || isNameTaken">Siguiente</ion-button>
+                    <ion-button fill="clear" (click)="goToLogin()">
+                        Volver
+                    </ion-button>
+                    <div class="register-text">
+                        <p>¿Ya tienes cuenta? <a>Inicia sesion</a></p>
+                    </div>
+                </div>
+
+                <div *ngIf="step === 2" [formGroup]="registerForm">
+                    <h3>Hola {{ registerForm.get('name')?.value }} ahora necesitas ingresar una dirección de correo y número de teléfono</h3>
+                    <ion-item>
+                        <ion-label position="floating">Correo</ion-label>
+                        <ion-input type="email" formControlName="email"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="floating">Número de teléfono</ion-label>
+                        <ion-input type="tel" formControlName="phone"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>
+                            <p>- Debe iniciar con "+" (Formato internacional)</p>
+                            <p>- No debe contenet espacios</p>
+                            <p>- Debe incluir el codigo del pais (ej: +52)</p>
+                            <p>- Minimo 8 digitos y maximo 15 despues del prefijo</p>
+                        </ion-label>
+                    </ion-item>
+                    <ion-text color="danger" *ngIf="registerForm.get('phone')?.hasError('pattern') && registerForm.get('phone')?.touched">
+                        <p>Por favor ingresa un numero de telefono valido</p>
+                    </ion-text>
+                    <ion-text color="danger" *ngIf="registerForm.get('phone')?.hasError('required') && registerForm.get('phone')?.touched">
+                        <p>El número de teléfono es obligatorio.</p>
+                    </ion-text>
+                    <ion-button expand="block" (click)="validatePhone()" [disabled]="registerForm.get('email')?.invalid || registerForm.get('phone')?.invalid">
+                        Siguiente
+                    </ion-button>
+
+                    <ion-button fill="clear" (click)="prevStep()">Volver</ion-button>
+                    <div class="register-text">
+                        <p>¿Ya tienes cuenta? <a>Inicia sesion</a></p>
+                    </div>
+                </div>
+                <div *ngIf="step === 3" [formGroup]="registerForm">
+                    <h3>Elige una contraseña</h3>
+                    <ion-item>
+                        <ion-label position="floating">Contraseña</ion-label>
+                        <ion-input type="password" formControlName="password"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="floating">Confirmar Contraseña</ion-label>
+                        <ion-input type="password" formControlName="confirmPassword"></ion-input>
+
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>
+                            <p>* Minimo 6 caracteres</p>
+                            <p>* Al menos una letra mayuscula</p>
+                            <p>* Al menos una letra minuscula</p>
+                            <p>* Al menos un numero entero</p>
+                            <p>* Al menos un caracter especial</p>
+                            <p>* Sin espacios</p>
+                        </ion-label>
+                    </ion-item>
+                    <ion-text color="danger" *ngIf="isPasswordMismatch">
+                        <p>Las contraseñas no coinciden</p>
+                    </ion-text>
+                    <ion-text color="danger" *ngIf="registerForm.get('password')?.errors?.['minlength'] && registerForm.get('password')?.touched">
+                        <p>La contraseña debe tener al menos 6 caracteres</p>
+                    </ion-text>
+                    <ion-text color="danger" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+                        <p>La contraseña es requerida</p>
+                    </ion-text>
+                    <ion-text color="danger" *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
+                        <p>Confirma tu contraseña</p>
+                    </ion-text>
+                    <re-captcha (resolved)="onRecaptchaResolved($event)" siteKey="6LfgSCUsAAAAAMvb2AqfifMf2V17sXip3YyLNDVu">
+                    </re-captcha>
+
+                    <ion-button expand="block" (click)="register()" [disabled]="registerForm.get('confirmPassword')?.invalid || !recaptchaToken">Ultimo paso</ion-button>
+                    <ion-button fill="clear" (click)="prevStep()">
+                        Volver
+                    </ion-button>
+                </div>
+
+                <div *ngIf="step === 4" [formGroup]="registerForm">
+                    <h3>Confirma tu telefono</h3>
+                    <p>Vale, como ultimo paso para confirmar que te pertenece el telefono hemos enviado un codigo de confirmación a {{ registerForm.get('phone')?.value }}</p>
+                    <ion-item>
+                        <ion-label position="floating">Código de confirmación</ion-label>
+                        <ion-input type="text" formControlName="code"></ion-input>
+                    </ion-item>
+                    <ion-text color="danger" *ngIf="registerForm.get('code')?.invalid && registerForm.get('code')?.touched">
+                        <p>Ingresa el código</p>
+                    </ion-text>
+                    <re-captcha (resolved)="onRecaptchaCodeResolved($event)" siteKey="6LfgSCUsAAAAAMvb2AqfifMf2V17sXip3YyLNDVu">
+                    </re-captcha>
+                    <ion-button expand="block" (click)="verifyEmail()" [disabled]="registerForm.get('code')?.invalid">Siguiente</ion-button>
+                    <ion-button fill="clear" (click)="prevStep()">
+                        Volver
+                    </ion-button>
+
+                </div>
+
+            </div>
         </div>
-
-        <div *ngIf="step === 2" [formGroup]="registerForm">
-            <h3>Hola {{ registerForm.get('name')?.value }} ahora necesitas ingresar una dirección de correo y número de teléfono</h3>
-            <ion-item>
-                <ion-label position="floating">Correo</ion-label>
-                <ion-input type="email" formControlName="email"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-label position="floating">Número de teléfono</ion-label>
-                <ion-input type="tel" formControlName="phone"></ion-input>
-            </ion-item>
-            <ion-text color="danger" *ngIf="registerForm.get('phone')?.hasError('pattern') && registerForm.get('phone')?.touched">
-                <p>El número de teléfono debe tener entre 10 y 15 dígitos y puede incluir un "+" al inicio.</p>
-            </ion-text>
-            <ion-text color="danger" *ngIf="registerForm.get('phone')?.hasError('required') && registerForm.get('phone')?.touched">
-                <p>El número de teléfono es obligatorio.</p>
-            </ion-text>
-            <ion-button expand="block" (click)="validatePhone()" [disabled]="registerForm.get('email')?.invalid || registerForm.get('phone')?.invalid">
-                Siguiente
-            </ion-button>
-            <ion-button fill="clear" (click)="prevStep()">Volver</ion-button>
-        </div>
-        <div *ngIf="step === 3" [formGroup]="registerForm">
-          <h3>Elige una contraseña</h3>
-          <ion-item>
-            <ion-label position="floating">Contraseña</ion-label>
-            <ion-input type="password" formControlName="password"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label position="floating">Confirmar Contraseña</ion-label>
-            <ion-input type="password" formControlName="confirmPassword"></ion-input>
-          </ion-item>
-            <ion-text color="danger" *ngIf="isPasswordMismatch">
-                <p>Las contraseñas no coinciden</p>
-          </ion-text>
-          <ion-text color="danger" *ngIf="registerForm.get('password')?.errors?.['minlength'] && registerForm.get('password')?.touched">
-            <p>La contraseña debe tener al menos 6 caracteres</p>
-          </ion-text>
-          <ion-text color="danger" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
-            <p>La contraseña es requerida</p>
-          </ion-text>
-          <ion-text color="danger" *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
-            <p>Confirma tu contraseña</p>
-          </ion-text>
-            <re-captcha (resolved)="onRecaptchaResolved($event)" siteKey="6LfgSCUsAAAAAMvb2AqfifMf2V17sXip3YyLNDVu">
-            </re-captcha>
-
-          <ion-button expand="block" (click)="register()" [disabled]="registerForm.get('confirmPassword')?.invalid || !recaptchaToken">Ultimo paso</ion-button>
-          <ion-button fill="clear" (click)="prevStep()">
-            Volver
-          </ion-button>
-        </div>
-
-        <div *ngIf="step === 4" [formGroup]="registerForm">
-          <h3>Confirma tu telefono</h3>
-          <p>Vale, como ultimo paso para confirmar que te pertenece el telefono hemos enviado un codigo de confirmación a {{ registerForm.get('phone')?.value }}</p>
-          <ion-item>
-            <ion-label position="floating">Código de confirmación</ion-label>
-            <ion-input type="text" formControlName="code"></ion-input>
-          </ion-item>
-          <ion-text color="danger" *ngIf="registerForm.get('code')?.invalid && registerForm.get('code')?.touched">
-            <p>Ingresa el código</p>
-          </ion-text>
-            <re-captcha (resolved)="onRecaptchaCodeResolved($event)" siteKey="6LfgSCUsAAAAAMvb2AqfifMf2V17sXip3YyLNDVu">
-            </re-captcha>
-          <ion-button expand="block" (click)="verifyEmail()" [disabled]="registerForm.get('code')?.invalid">Siguiente</ion-button>
-          <ion-button fill="clear" (click)="prevStep()">
-            Volver
-          </ion-button>
-
-        </div>
-
-      </div>
     </div>
-  </div>
 
 </ion-content>

@@ -7,7 +7,17 @@
   padding: 20px;
   box-sizing: border-box;
 }
+ion-list.custom-list {
+  ion-item {
+    padding: 0; /* Elimina el relleno interno */
+    margin: 0; /* Elimina el margen externo */
+  }
 
+  ion-label p {
+    margin: 0; /* Elimina el margen de los párrafos */
+    font-size: 14px; /* Ajusta el tamaño del texto si es necesario */
+  }
+}
 .container {
   width: 100%;
   max-width: 400px;

@@ -17,12 +17,11 @@ import { AuthService } from 'src/app/services/auth/auth-service';
             useValue: { siteKey: '6LdkpCIsAAAAABlXRbHBhYjm_GQM_Y89N6lOnEzh' },
         }
     ],
-    imports: [RecaptchaModule, IonButton, IonText, IonInput, IonLabel, IonImg, IonContent, IonItem, CommonModule, ReactiveFormsModule, FormsModule]
+    imports: [RecaptchaModule, IonAlert, IonButton, IonText, IonInput, IonLabel, IonImg, IonContent, IonItem, CommonModule, ReactiveFormsModule, FormsModule]
 })
 export class RegisterComponent implements OnInit {
-
     authService = inject(AuthService);
-    step = 1;
+    step = 3;
     registerForm: FormGroup;
     namesTaken: string[] = [];
     isLoading = false;
@@ -48,16 +47,30 @@ export class RegisterComponent implements OnInit {
             name: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
             code: [''],
-            password: ['', [Validators.required, Validators.minLength(6)]],
-            confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
+            password: [
+                '',
+                [
+                    Validators.required,
+                    Validators.minLength(6),
+                    Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])[^\s]{6,}$/),
+                ],
+            ],
+            confirmPassword: [
+                '',
+                [
+                    Validators.required,
+                    Validators.minLength(6),
+                    Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])[^\s]{6,}$/),
+                ],
+            ],
             preferredName: ['', Validators.required],
             phone: [
                 '',
                 [
                     Validators.required,
-                    Validators.minLength(10),
+                    Validators.minLength(8),
                     Validators.maxLength(15),
-                    Validators.pattern(/^[+]?[0-9]{10,15}$/),
+                    Validators.pattern(/^\+\d{2,3}[0-9]{8,12}$/),
                 ],
             ],
         });
@@ -145,7 +158,7 @@ export class RegisterComponent implements OnInit {
             this.registerForm.get('confirmPassword')?.value,
             this.registerForm.get('preferredName')?.value,
             this.recaptchaToken,
-            '+52' + this.registerForm.get('phone')?.value
+            this.registerForm.get('phone')?.value
         ).subscribe({
             next: async (response) => {
                 if ((window as any).grecaptcha) {
