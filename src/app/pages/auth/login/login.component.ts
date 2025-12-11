@@ -90,13 +90,12 @@ export class LoginComponent implements OnInit {
             }, error: async (error) => {
                 this.loading = false;
 
-              /*
                 if (error.error.requires_email_code && this.recaptchaToken) {
                     this.resentVerifyCode();
                     this.router.navigate(['/verify-code'], { queryParams: { email: this.loginForm.get('email')?.value } });
                     this.hiddeLoading();
                     return;
-                }*/
+                }
                 if ((window as any).grecaptcha) {
                     (window as any).grecaptcha.reset();
                 }
